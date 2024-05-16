@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3 uid="uid://c831yd0xm2rl6"]
+
+[ext_resource type="Script" path="res://custom_resources/enemy_stats.gd" id="3_i5sh3"]
+
+[resource]
+script = ExtResource("3_i5sh3")
+character_name = ""
+description = ""
+max_health = 1
+health_regeneration = 0
+block_max = 999
+block_reduction = 1000
+block_multiplier = 0.0
+max_mana = 10
+mana_regeneration = 3
+cards_per_turn = 5
+max_hand_size = 12
