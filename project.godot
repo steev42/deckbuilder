@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Clone The Spire"
+config/name="Deckbuilder Name TBD"
 run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 boot_splash/show_image=false
