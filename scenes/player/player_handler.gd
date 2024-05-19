@@ -14,13 +14,20 @@ func _ready() -> void:
 
 
 func start_battle(char_stats: Stats_Player) -> void:
+	# TODO This group of queue_free() calls can be removed if there is no default hand
 	for card : CardUI in hand.get_children():
 		card.queue_free()
 	character = char_stats
 	character.draw_pile = character.deck.duplicate(true)
+	
+	# TODO This assert can be removed at some point, but keeping for sanity.
 	assert (len(character.draw_pile.cards) > 0, "No Draw Pile for character!")
+	
 	character.draw_pile.shuffle()
 	character.discard = CardPile.new()
+	
+	player.status_handler.statuses_applied.connect(_on_statuses_applied)
+	
 	start_turn()
 	
 	
@@ -28,13 +35,14 @@ func start_turn() -> void:
 	character.block = 0
 	character.regenerate_mana()
 	player.status_handler.apply_statuses_by_type(Status.Type.START_OF_TURN)
-	draw_cards(character.cards_per_turn)
+	# When this is done, the statuses_applied signal is emitted; draw cards when handling that.
+	#draw_cards(character.cards_per_turn)
 
 
 func end_turn() -> void:
 	hand.disable_hand()
 	player.status_handler.apply_statuses_by_type(Status.Type.START_OF_TURN)
-	discard_cards()
+	#discard_cards()
 	
 	
 func draw_card() -> void:
@@ -75,3 +83,11 @@ func reshuffle_deck_from_discard() -> void:
 	
 func _on_card_played(card: Card) -> void:
 	character.discard.add_card(card)
+
+
+func _on_statuses_applied(type: Status.Type) -> void:
+	match type:
+		Status.Type.START_OF_TURN:
+			draw_cards(character.cards_per_turn)
+		Status.Type.END_OF_TURN:
+			discard_cards()
