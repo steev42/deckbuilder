@@ -5,9 +5,9 @@
 
 [resource]
 script = ExtResource("2_yj1sw")
-id = ""
+id = "exposed"
 type = 0
-stacking = 0
+stacking = 2
 max_value = 999
 min_value = 0
 current_value = 0

@@ -15,6 +15,7 @@ func shake(thing: Node2D, strength: float, duration: float=0.2) -> void:
 		tween.tween_property(thing, "position", target, duration / float(shake_count))
 		strength *= 0.75
 	
-	tween.finished.connect(func(): thing.position = orig_pos)
+	if (thing != null):
+		tween.finished.connect(func(): thing.position = orig_pos)
 	
 	

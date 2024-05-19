@@ -18,6 +18,7 @@ func start_turn() -> void:
 	var first_enemy: Combatant_AI = get_child(0) as Combatant_AI
 	first_enemy.do_turn()
 
+
 func _on_enemy_action_completed(enemy: Combatant_AI) -> void:
 	if enemy.get_index() == get_child_count() - 1:
 		Events.enemy_turn_ended.emit()

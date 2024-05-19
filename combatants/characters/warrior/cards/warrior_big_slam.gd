@@ -1,5 +1,6 @@
 extends Card
 
+const EXPOSED = preload("res://statuses/exposed.tres")
 @export var optional_sound: AudioStream
 
 func apply_effects(targets: Array[Node]) -> void:
@@ -8,8 +9,10 @@ func apply_effects(targets: Array[Node]) -> void:
 	damage_effect.sound=sound
 	damage_effect.execute(targets)
 	
-	var exposed_effect := ExposeEffect.new()
-	exposed_effect.amount = 2
-	exposed_effect.execute(targets)
-	#print("This will also apply a status effect to the enemy later on.")
+	var status_effect := StatusEffect.new()
+	var exposed_effect = EXPOSED.duplicate()
+	exposed_effect.current_value = 2
+	status_effect.status = exposed_effect
+	status_effect.execute(targets)
+
 

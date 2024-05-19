@@ -55,3 +55,6 @@ static func create_new_modifier(modifier_source: String, what_type: ValueType) -
 	
 	return new_modifier
 
+func _to_string() -> String:
+	var result = ("ModifierValue: type=%, value=%, source=%" % [type, value, source])
+	return result

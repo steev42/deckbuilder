@@ -10,6 +10,9 @@ func get_tooltip() -> String:
 
 
 func initialize_status(target: Node) -> void:
+	if target == null:
+		print ("No target to add status to!")
+		return
 	# Make sure target has a modifier handler
 	assert(target.get("modifier_handler"), "No modifiers on %s" % target)
 		
@@ -22,7 +25,7 @@ func initialize_status(target: Node) -> void:
 	if not exposed_modifier_value:
 		# It doesn't already exist, so create a new modifier
 		exposed_modifier_value = ModifierValue.create_new_modifier(MODIFIER_NAME, ModifierValue.ValueType.PERCENTAGE_ADJUSTMENT)
-		exposed_modifier_value.condition_value = damage_multiplier
+		exposed_modifier_value.value = damage_multiplier
 		dmg_taken_modifier.add_value(exposed_modifier_value)
 	
 	# listen to events

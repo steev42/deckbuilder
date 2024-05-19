@@ -43,33 +43,41 @@ func clear_values() -> void:
 
 
 func get_modified_value(base: int) -> int:
+	print ("In modifier.get_modified_value")
 	var flat_adjustment: int = base
 	var percent_adjustment: float = 1.0
-	var min_value: int = -INF
-	var max_value: int = INF
+	var min_value: int = floori(-INF)
+	var max_value: int = floori(INF)
 	var has_override : bool = false
 	var has_conditional: bool = false
 	var override: int = 0
 	var has_cond_override = false
 	var cond_override = 0
-
+	
+	print (get_children())
+	
 	for value: ModifierValue in get_children():
+		print (value)
 		match value.type:
 			ModifierValue.ValueType.FLAT_ADJUSTMENT:
-				flat_adjustment += value.value
+				flat_adjustment += floori(value.value)
+				print ("New flat adjustment: %s " % flat_adjustment)
 			ModifierValue.ValueType.PERCENTAGE_ADJUSTMENT:
 				percent_adjustment += value.value # Multiply, not add?
+				print ("New percentage adjustment: %s" % percent_adjustment)
 			ModifierValue.ValueType.MINIMUM_VALUE:
-				min_value = max(min_value, value.value)
+				min_value = floori(max(min_value, value.value))
 			ModifierValue.ValueType.MAXIMUM_VALUE:
-				max_value = min(max_value, value.value)
+				max_value = floori(min(max_value, value.value))
 			ModifierValue.ValueType.OVERRIDE:
-				override = value.value  # What do we do with multiple override values?
+				override = floori(value.value)  # What do we do with multiple override values?
 				has_override = true
 			ModifierValue.ValueType.CONDITIONAL_MINIMUM, ModifierValue.ValueType.CONDITIONAL_MAXIMUM, ModifierValue.ValueType.CONDITIONAL_OVERRIDE:
 				has_conditional = true
 			_:
 				continue
+	print ("Got through all modifier values...")
+	return floori(flat_adjustment * percent_adjustment)
 	
 	var adjusted_value =  floori(min(max((flat_adjustment * percent_adjustment), min_value), max_value))
 	
@@ -78,8 +86,8 @@ func get_modified_value(base: int) -> int:
 	
 	# Can we do things like Boot, where if X is < Y, it becomes Y?  Or if X < Y, it becomes 1?
 	if has_conditional:
-		min_value = -INF
-		max_value = INF
+		min_value = floori(-INF)
+		max_value = floori(INF)
 
 		
 		for value: ModifierValue in get_children():

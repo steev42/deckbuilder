@@ -5,34 +5,43 @@ const HAND_DRAW_INTERVAL := 0.25
 const HAND_DISCARD_INTERVAL := 0.25
 
 @export var hand: Hand
+@export var player: Combatant_Player
 
 var character: Stats_Player
 
 func _ready() -> void:
 	Events.card_played.connect(_on_card_played)
 
+
 func start_battle(char_stats: Stats_Player) -> void:
 	for card : CardUI in hand.get_children():
 		card.queue_free()
 	character = char_stats
 	character.draw_pile = character.deck.duplicate(true)
+	assert (len(character.draw_pile.cards) > 0, "No Draw Pile for character!")
 	character.draw_pile.shuffle()
 	character.discard = CardPile.new()
 	start_turn()
 	
+	
 func start_turn() -> void:
 	character.block = 0
 	character.regenerate_mana()
+	player.status_handler.apply_statuses_by_type(Status.Type.START_OF_TURN)
 	draw_cards(character.cards_per_turn)
+
 
 func end_turn() -> void:
 	hand.disable_hand()
+	player.status_handler.apply_statuses_by_type(Status.Type.START_OF_TURN)
 	discard_cards()
+	
 	
 func draw_card() -> void:
 	reshuffle_deck_from_discard()
 	hand.add_card(character.draw_pile.draw_card())
 	reshuffle_deck_from_discard()
+
 
 func draw_cards(amount: int) -> void:
 	var tween := create_tween()
@@ -41,6 +50,7 @@ func draw_cards(amount: int) -> void:
 		tween.tween_interval(HAND_DRAW_INTERVAL)
 	tween.finished.connect(
 		func(): Events.player_hand_drawn.emit())
+
 
 func discard_cards() -> void:
 	var tween := create_tween()
@@ -53,6 +63,7 @@ func discard_cards() -> void:
 		func():
 			Events.player_hand_discarded.emit()
 	)
+
 	
 func reshuffle_deck_from_discard() -> void:
 	if not character.draw_pile.empty():
@@ -60,6 +71,7 @@ func reshuffle_deck_from_discard() -> void:
 	while not character.discard.empty():
 		character.draw_pile.add_card(character.discard.draw_card())
 	character.draw_pile.shuffle()
+
 	
 func _on_card_played(card: Card) -> void:
 	character.discard.add_card(card)

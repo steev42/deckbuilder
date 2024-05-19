@@ -29,6 +29,7 @@ enum StackType {NONE, INTENSITY, DURATION, BOTH}
 
 
 func do_stack_reduction() -> void:
+	print ("Ordered to reduce stack size!")
 	current_value = floori((current_value - turn_stack_reduction) * turn_stack_multiplier)
 	# in youtube version, the value reduction happens in the _on_status_applied callback found in the status handler
 

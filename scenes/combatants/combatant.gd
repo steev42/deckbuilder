@@ -15,16 +15,23 @@ signal card_discarded
 
 
 enum TargetType {PLAYER, ENEMY, ALLY}
+
 const WHITE_SPRITE_MATERIAL := preload("res://art/white_shader_material.tres")
+
 @onready var image: Sprite2D = %Image
 @onready var pointer: Sprite2D = %Pointer
 @onready var stats_ui: StatsUI = $StatsUI
 @onready var status_handler: StatusHandler = $StatusHandler
+@onready var modifier_handler: ModifierHandler = $ModifierHandler
 
 
 @export var target_type : TargetType = TargetType.ENEMY
 
 @export var stats: Stats : set = set_stats
+
+
+func _ready() -> void:
+	status_handler.status_owner = self
 
 
 func set_stats(value:Stats) -> void:
@@ -65,14 +72,16 @@ func take_damage(amount:int) -> void:
 	# 	in the same function. Can we do something about that?
 	if stats.health <= 0:
 		return
-	
+	print ("In take_damage function")
+	var modified_damage := modifier_handler.get_modified_value(amount, Modifier.ModifierType.DAMAGE_TAKEN)
+	print ("dealing damage: {amount} is modified into {modded}" % {"amount":amount, "modded" : modified_damage})
 	# Turn white and shake the sprite a little, then reset.
 	image.material = WHITE_SPRITE_MATERIAL
 	var tween := create_tween()
 	# shake the sprite
 	tween.tween_callback(Shaker.shake.bind(self, 15, 0.15))
 	# actually deal the damage
-	tween.tween_callback(stats.take_damage.bind(amount))
+	tween.tween_callback(stats.take_damage.bind(modified_damage))
 	tween.tween_interval(0.17)
 	
 	tween.finished.connect(func():
@@ -87,17 +96,6 @@ func heal(amount:int) -> void:
 
 func check_for_death() -> void:
 	pass
-
-# TODO This whole function probably needs to be removed!
-func add_target_effect(effect: Status) -> void:
-	effect.connect_target_listeners(self)
-	#Events.player_turn_ended.connect(effect._on_turn_end)
-	if not stats.has_target_effect(effect):
-		status_handler.add_effect(effect)
-	stats.add_target_effect(effect)
-	# The target_effect_ui script handles updating the label & deleting itself
-	# When needed.
-
 
 # TODO On the following two functions, they will *always* show the pointer. 
 # Should try to set something up that the pointer is only visible if the 
