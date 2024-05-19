@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ExposedStatus" load_steps=3 format=3 uid="uid://bnt1u81r3ty8p"]
+
+[ext_resource type="Texture2D" uid="uid://coxe582rcd4t" path="res://art/ravenmore_icons/64/x.png" id="1_2mt0p"]
+[ext_resource type="Script" path="res://statuses/exposed.gd" id="2_yj1sw"]
+
+[resource]
+script = ExtResource("2_yj1sw")
+id = ""
+type = 0
+stacking = 0
+max_value = 999
+min_value = 0
+current_value = 0
+turn_stack_reduction = 1
+turn_stack_multiplier = 0.0
+can_expire = true
+name = "Exposed"
+icon = ExtResource("1_2mt0p")
+tooltip = "Increases damage taken by {multiplier}%% for the next {duration} turns."

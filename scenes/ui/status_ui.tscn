@@ -1,16 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://cb0gwecw5d4ep"]
 
-[ext_resource type="Script" path="res://scenes/ui/target_effect_ui.gd" id="1_epgk8"]
-[ext_resource type="Texture2D" uid="uid://coxe582rcd4t" path="res://art/ravenmore_icons/64/x.png" id="1_h11wm"]
+[ext_resource type="Texture2D" uid="uid://coxe582rcd4t" path="res://art/ravenmore_icons/64/x.png" id="1_kpg41"]
+[ext_resource type="Script" path="res://scenes/ui/status_ui.gd" id="2_qlfd2"]
 
-[node name="TargetEffectUI" type="TextureRect"]
+[node name="StatusUI" type="TextureRect"]
 custom_minimum_size = Vector2(40, 40)
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("1_h11wm")
+texture = ExtResource("1_kpg41")
 expand_mode = 1
 stretch_mode = 5
-script = ExtResource("1_epgk8")
+script = ExtResource("2_qlfd2")
 
 [node name="Counter" type="Label" parent="."]
 unique_name_in_owner = true

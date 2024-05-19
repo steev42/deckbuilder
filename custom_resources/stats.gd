@@ -2,7 +2,7 @@ class_name Stats
 extends Resource
 
 signal stats_changed
-signal effect_updated(effect: TargetEffect)
+signal effect_updated(effect: Status)
 signal death_check_required
 
 @export_group("Visuals")
@@ -39,11 +39,11 @@ var draw_pile: CardPile
 #TODO Make block an effect?
 var character_effects = {}
 
-func has_target_effect(effect: TargetEffect) -> bool:
+func has_target_effect(effect: Status) -> bool:
 	return character_effects.has(effect.name)
 
 
-func add_target_effect(effect: TargetEffect) -> TargetEffect:
+func add_target_effect(effect: Status) -> Status:
 	if has_target_effect(effect):
 		character_effects[effect.name].current_value += effect.current_value
 	else:

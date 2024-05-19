@@ -19,7 +19,8 @@ const WHITE_SPRITE_MATERIAL := preload("res://art/white_shader_material.tres")
 @onready var image: Sprite2D = %Image
 @onready var pointer: Sprite2D = %Pointer
 @onready var stats_ui: StatsUI = $StatsUI
-@onready var effects_ui: EffectsUI = $EffectsUI
+@onready var status_handler: StatusHandler = $StatusHandler
+
 
 @export var target_type : TargetType = TargetType.ENEMY
 
@@ -87,12 +88,12 @@ func heal(amount:int) -> void:
 func check_for_death() -> void:
 	pass
 
-
-func add_target_effect(effect: TargetEffect) -> void:
+# TODO This whole function probably needs to be removed!
+func add_target_effect(effect: Status) -> void:
 	effect.connect_target_listeners(self)
 	#Events.player_turn_ended.connect(effect._on_turn_end)
 	if not stats.has_target_effect(effect):
-		effects_ui.add_effect(effect)
+		status_handler.add_effect(effect)
 	stats.add_target_effect(effect)
 	# The target_effect_ui script handles updating the label & deleting itself
 	# When needed.

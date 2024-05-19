@@ -20,6 +20,7 @@ func has_modifier(type: Modifier.ModifierType) -> bool:
 
 
 func get_modifier(type: Modifier.ModifierType) -> Modifier:
+	# TODO If doesn't exist, create it
 	for modifier: Modifier in get_children():
 		if modifier.type == type:
 			return modifier
