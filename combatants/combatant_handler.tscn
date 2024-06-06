@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4htri0qxbxwh"]
+
+[ext_resource type="Script" path="res://scenes/combatants/combatant_handler.gd" id="1_7yc5l"]
+
+[node name="CombatantHandler" type="Node"]
+script = ExtResource("1_7yc5l")

@@ -4,7 +4,7 @@ extends Resource
 signal status_applied(status: Status)
 signal status_changed
 
-enum Type {START_OF_TURN, END_OF_TURN, EVENT_BASED}
+enum Type {START_OF_ROUND, START_OF_TURN, END_OF_TURN, END_OF_ROUND, EVENT_BASED}
 # Event based for things like on card draw, on damage taken, etc.
 
 enum StackType {NONE, INTENSITY, DURATION, BOTH}

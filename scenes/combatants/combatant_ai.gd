@@ -57,8 +57,15 @@ func update_action() -> void:
 
 
 func do_turn() -> void:
-	stats.block = 0 # TODO Hmmm...this should be less magic-numbery
+	do_action()
+
+func do_action() -> void:
 	if not current_action:
 		return
 	current_action.perform_action()
 
+func _on_action_completed() -> void:
+	# If there is another action to do, do that (check mana, cards available, etc.)
+	
+	# Otherwise, do end of turn status effects
+	status_handler.apply_statuses_by_type(Status.Type.END_OF_TURN)

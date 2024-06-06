@@ -1,21 +1,7 @@
 class_name Combatant
 extends Area2D
 
-signal turn_begin
-signal turn_end
-signal hand_drawn
-signal hand_discarded
-signal damage_taken
-signal damage_dealt
-signal effect_added
-signal effect_removed
-signal card_drawn
-signal card_played
-signal card_discarded
-
-
 enum TargetType {PLAYER, ENEMY, ALLY}
-
 const WHITE_SPRITE_MATERIAL := preload("res://art/white_shader_material.tres")
 
 @onready var image: Sprite2D = %Image
@@ -24,6 +10,11 @@ const WHITE_SPRITE_MATERIAL := preload("res://art/white_shader_material.tres")
 @onready var status_handler: StatusHandler = $StatusHandler
 @onready var modifier_handler: ModifierHandler = $ModifierHandler
 
+signal start_round_complete
+signal turn_complete
+signal end_round_complete
+
+signal combatant_died
 
 @export var target_type : TargetType = TargetType.ENEMY
 
@@ -32,6 +23,7 @@ const WHITE_SPRITE_MATERIAL := preload("res://art/white_shader_material.tres")
 
 func _ready() -> void:
 	status_handler.status_owner = self
+	status_handler.statuses_applied.connect(_on_statuses_applied)
 
 
 func set_stats(value:Stats) -> void:
@@ -51,6 +43,41 @@ func set_stats(value:Stats) -> void:
 		stats.death_check_required.connect(check_for_death)
 	
 	update_character()
+	
+
+func setup_for_battle() -> void:
+	# TODO For Allies & Enemies, make sure starting deck is properly
+	# configured.
+	stats.draw_pile = stats.deck.duplicate()
+	
+	# Let's make sure that there is now a draw pile before we do other things.
+	# Since when we first test this, we're still using action pickers for AI
+	# creatures instead of decks.
+	if len(stats.draw_pile.cards) > 0:
+		stats.draw_pile.shuffle()
+		stats.discard = CardPile.new()
+		# TODO Hand initialization?
+		# Right now, Hand is an HBoxContainer and each card is unique within it
+		# That doesn't really work for non-player actors.  So we will need some
+		# way to remember/determine which cards creatures are drawing that doesn't
+		# rely on the Hand UI scene.
+
+func start_round() -> void:
+	# The following method is called by the handler to actually start the
+	# combatant's round.
+	#status_handler.apply_statuses_by_type(Status.Type.START_OF_ROUND)
+	
+	stats.regenerate_mana() # TODO probably in the stats, check for statuses
+							# that effect turn-based mana
+	stats.block = 0 # TODO check for statuses that affect block
+	
+	#TODO  Draw cards!
+	
+	start_round_complete.emit()
+
+func end_round() -> void:
+	# discard cards
+	end_round_complete.emit()
 
 
 func update_stats() -> void:
@@ -86,16 +113,38 @@ func take_damage(amount:int) -> void:
 	
 	tween.finished.connect(func():
 		image.material = null
+		
+		if stats.health <= 0:
+			combatant_died.emit()
+			queue_free() # TODO Should this be here?
 		)
 
 
 # Placeholder function in case I want to do something like this later.
-func heal(amount:int) -> void:
+func heal(_amount:int) -> void:
 	pass
 
+func do_turn()-> void:
+	# Do nothing here.  In the extending classes, this can be overwritten to
+	# actually do something.  But it's being called from the base class, so
+	# needs to have a placeholder function here.
+	pass
 
 func check_for_death() -> void:
 	pass
+
+func _on_statuses_applied(type: Status.Type) -> void:
+	match type:
+		Status.Type.START_OF_ROUND:
+			start_round()
+		Status.Type.START_OF_TURN:
+			do_turn()
+		Status.Type.END_OF_TURN:
+			turn_complete.emit()
+			# This allows the next actor to start moving, but it is done
+			# in the handler and/or the manager.
+		Status.Type.END_OF_ROUND:
+			end_round()
 
 # TODO On the following two functions, they will *always* show the pointer. 
 # Should try to set something up that the pointer is only visible if the 

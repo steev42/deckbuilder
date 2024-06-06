@@ -35,6 +35,7 @@ var mana: int: set = set_mana
 var deck: CardPile
 var discard: CardPile
 var draw_pile: CardPile
+var hand: Hand
 
 #TODO Make block an effect?
 var character_effects = {}
