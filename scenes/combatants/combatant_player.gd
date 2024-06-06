@@ -7,7 +7,7 @@ func _ready() -> void:
 
 
 func _on_player_turn_end() -> void:
-	turn_end.emit()
+	turn_complete.emit()
 
 
 func check_for_death() -> void:
