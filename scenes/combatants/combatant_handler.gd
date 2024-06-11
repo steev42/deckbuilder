@@ -1,6 +1,9 @@
 class_name CombatantHandler
 extends Node
 
+const COMBATANT = preload("res://scenes/combatants/combatant.tscn")
+const COMBATANT_AI = preload("res://scenes/combatants/combatant_ai.tscn")
+
 var acting_combatants: Array[Combatant]
 
 #signal setup_complete(handler)
@@ -24,9 +27,22 @@ func reset_side() -> void:
 		combatant.queue_free()
 
 
-func setup_side() -> void:
+func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> void:
 	# TODO Initialize all children, set their stats
 	# ^^ That's going to be the hard part here, I think.
+	for creature in side_stats:
+		if target_type == Combatant.TargetType.PLAYER:
+			var creature_scene := COMBATANT.instantiate()
+			#creature_scene.position
+			creature_scene.set_stats(creature)
+			add_child(creature_scene)
+		else:
+			var creature_scene := COMBATANT_AI.instantiate()
+			if creature is EnemyStats:
+				creature_scene.set_stats(creature)
+				# CHECK Only add if we have the right stats?
+				add_child(creature_scene)
+
 	
 	# for each child, listen to their signals as needed
 	# initialize decks/discard/exhaust piles

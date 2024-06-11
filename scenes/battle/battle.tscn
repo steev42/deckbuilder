@@ -74,6 +74,7 @@ stats = ExtResource("2_wisx3")
 [node name="CardTargetSelector" parent="." instance=ExtResource("3_6vo1o")]
 
 [node name="PlayerHandler" type="Node" parent="." node_paths=PackedStringArray("hand")]
+process_mode = 4
 script = ExtResource("8_tqb0y")
 hand = NodePath("../BattleUI/Hand")
 
