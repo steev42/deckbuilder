@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://ec7254tpq71t"]
+[gd_scene load_steps=27 format=3 uid="uid://ec7254tpq71t"]
 
 [ext_resource type="Texture2D" uid="uid://du1484s086n1a" path="res://art/dungeon_background.jpg" id="1_6sbhe"]
 [ext_resource type="Script" path="res://scenes/battle/battle.gd" id="1_qwpwj"]
@@ -6,6 +6,7 @@
 [ext_resource type="Resource" uid="uid://f1keeqnp4xd3" path="res://combatants/characters/warrior/warrior.tres" id="2_wisx3"]
 [ext_resource type="PackedScene" uid="uid://n4qqgvyibnyi" path="res://scenes/card_target_selector/card_target_selector.tscn" id="3_6vo1o"]
 [ext_resource type="AudioStream" uid="uid://siutennhwd0u" path="res://sound/8_bit_iced_village_lofi.mp3" id="3_mgtie"]
+[ext_resource type="Resource" uid="uid://cygkvvslnbwl8" path="res://battle_data/battle_pools/default_battle_pool.tres" id="4_lpfsc"]
 [ext_resource type="Script" path="res://scenes/battle/combat_manager.gd" id="5_65doh"]
 [ext_resource type="Script" path="res://scenes/enemy/enemy_handler.gd" id="6_5xjsf"]
 [ext_resource type="PackedScene" uid="uid://c0h0ai4xtcail" path="res://scenes/combatants/combatant_ai_enemy.tscn" id="6_7yt4h"]
@@ -32,6 +33,7 @@ size = Vector2(1152, 410)
 script = ExtResource("1_qwpwj")
 char_stats = ExtResource("2_wisx3")
 music = ExtResource("3_mgtie")
+battle_pool = ExtResource("4_lpfsc")
 metadata/_edit_lock_ = true
 
 [node name="Background" type="Sprite2D" parent="."]
@@ -55,11 +57,12 @@ script = ExtResource("5_65doh")
 
 [node name="AllyHandler" parent="CombatManager" instance=ExtResource("6_qtuhh")]
 
-[node name="PlayerHandler1" parent="CombatManager" instance=ExtResource("6_qtuhh")]
+[node name="PlayerHandler" parent="CombatManager" instance=ExtResource("6_qtuhh")]
 
-[node name="EnemyHandler1" parent="CombatManager" instance=ExtResource("6_qtuhh")]
+[node name="EnemyHandler" parent="CombatManager" instance=ExtResource("6_qtuhh")]
 
 [node name="EnemyHandler" type="Node2D" parent="."]
+process_mode = 4
 script = ExtResource("6_5xjsf")
 
 [node name="RatEnemy" parent="EnemyHandler" instance=ExtResource("6_7yt4h")]
@@ -68,6 +71,7 @@ ai = ExtResource("7_iekho")
 stats = ExtResource("8_mkd0g")
 
 [node name="CombatantPlayer" parent="." instance=ExtResource("8_2gelq")]
+process_mode = 4
 position = Vector2(137, 275)
 stats = ExtResource("2_wisx3")
 

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BattleEntry" load_steps=3 format=3 uid="uid://cibb51nr6vbcq"]
+
+[ext_resource type="Resource" uid="uid://f00tax705w7g" path="res://combatants/enemies/bat/bat_enemy.tres" id="1_45nw8"]
+[ext_resource type="Script" path="res://custom_resources/battle_entry.gd" id="2_7ckwq"]
+
+[resource]
+script = ExtResource("2_7ckwq")
+id = "solo bat fight"
+min_gold = 25
+max_gold = 45
+default_weight = 1.0
+enemy_stats = ExtResource("1_45nw8")
+min_level = 0
+max_level = 20
+additional_creature_weights = [1.0]

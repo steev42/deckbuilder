@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BattleEntry" load_steps=4 format=3 uid="uid://btlo4klmh72lu"]
+
+[ext_resource type="Resource" uid="uid://cuegewwh5hq3p" path="res://battle_data/battle_pools/bat_only.tres" id="1_20y61"]
+[ext_resource type="Resource" uid="uid://f00tax705w7g" path="res://combatants/enemies/bat/bat_enemy.tres" id="1_62kwn"]
+[ext_resource type="Script" path="res://custom_resources/battle_entry.gd" id="1_odwpa"]
+
+[resource]
+script = ExtResource("1_odwpa")
+id = "multi bat fight"
+min_gold = 25
+max_gold = 45
+default_weight = 1.0
+enemy_stats = ExtResource("1_62kwn")
+min_level = 0
+max_level = 20
+additional_creature_weights = [0.0, 1.0, 1.0, 0.0, 0.0]
+additional_creature_pool = ExtResource("1_20y61")

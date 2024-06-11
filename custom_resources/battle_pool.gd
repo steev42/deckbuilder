@@ -3,6 +3,17 @@ extends Resource
 
 @export var pool : Array[BattleEntry] = []
 
+#func get_battle_creatures(level: int) -> Array[Stats]:
+	#var full_battle = Array[Stats]
+	#var entry = get_random_creature_for_battle(level)
+	#full_battle.append(entry.enemy_stats)
+	#if entry:
+		#var extras = entry.fill_combat_encounter(level)
+		#for creature in extras:
+			#full_battle.append(creature.enemy_stats)
+	#return full_battle
+
+
 func get_random_creature_for_battle(level: int) -> BattleEntry:
 	var roll := randf_range(0.0, _get_total_weights_by_level(level))
 	var accumulated_weight := 0.0

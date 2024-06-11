@@ -26,7 +26,6 @@ Tweakables="*res://global/tweakables.gd"
 
 [display]
 
-window/size/mode=3
 window/stretch/mode="viewport"
 
 [dotnet]

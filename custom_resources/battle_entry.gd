@@ -21,7 +21,7 @@ var adjusted_weight = default_weight
 @export var additional_creature_pool : BattlePool
 
 func fill_combat_encounter(level: int) -> Array[BattleEntry]:
-	var extra_creatures = []
+	var extra_creatures : Array[BattleEntry] = []
 	for i in _get_number_of_additional_creatures():
 		extra_creatures.append(additional_creature_pool.get_random_creature_for_battle(level))
 		# NOTE This pull from the pool does *NOT* adjust weights; all creatures should use their

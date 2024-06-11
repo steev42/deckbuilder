@@ -4,8 +4,8 @@ extends Node
 enum Side {ALLY, PLAYER, ENEMY}
 
 @onready var ally_handler: CombatantHandler = $AllyHandler
-@onready var player_handler: CombatantHandler = $PlayerHandler1
-@onready var enemy_handler: CombatantHandler = $EnemyHandler1
+@onready var player_handler: CombatantHandler = $PlayerHandler
+@onready var enemy_handler: CombatantHandler = $EnemyHandler
 
 var active_handler = ally_handler
 
@@ -27,8 +27,8 @@ func _ready() -> void:
 			#handler.setup_complete.connect(_on_setup_complete)
 		if not handler.start_round_complete.is_connected(_on_start_round_complete):
 			handler.start_round_complete.connect(_on_start_round_complete.bind(handler))
-		if not handler.side_turn.is_connected(_on_side_turn_complete):
-			handler.side_turn.connect(_on_side_turn_complete.bind(handler))
+		if not handler.side_turn_complete.is_connected(_on_side_turn_complete):
+			handler.side_turn_complete.connect(_on_side_turn_complete.bind(handler))
 		if not handler.end_round_complete.is_connected(_on_end_round_complete):
 			handler.end_round_complete.connect(_on_end_round_complete.bind(handler))
 
@@ -60,7 +60,7 @@ func _on_side_turn_complete(handler: CombatantHandler) -> void:
 		active_handler.start_side_turn()
 
 
-func start_battle() -> void:
+func start_battle(players: Array[Stats], enemies: Array[Stats], allies: Array[Stats]) -> void:
 	# Make sure our handlers are ready before we try to do stuff with them.
 	if not is_node_ready():
 		await ready
@@ -72,9 +72,9 @@ func start_battle() -> void:
 	
 	# These methods should place creatures on the board, setup any card piles,
 	# and TODO possibly arrange the UI to link to the player card piles.
-	player_handler.setup_side([], Combatant.TargetType.PLAYER)
-	enemy_handler.setup_side([], Combatant.TargetType.ENEMY)
-	ally_handler.setup_side([], Combatant.TargetType.ALLY)
+	player_handler.setup_side(players, Combatant.TargetType.PLAYER)
+	enemy_handler.setup_side(enemies, Combatant.TargetType.ENEMY)
+	ally_handler.setup_side(allies, Combatant.TargetType.ALLY)
 	
 	# Now that everyone is setup, we can start the fight.  Allies go first!
 	ally_handler.start_round()

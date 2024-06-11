@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="BattlePool" load_steps=3 format=3 uid="uid://cuegewwh5hq3p"]
+
+[ext_resource type="Resource" uid="uid://cibb51nr6vbcq" path="res://battle_data/battle_entries/solo_bat_fight.tres" id="1_j7j0l"]
+[ext_resource type="Script" path="res://custom_resources/battle_pool.gd" id="1_qev6b"]
+
+[resource]
+script = ExtResource("1_qev6b")
+pool = Array[Resource("res://custom_resources/battle_entry.gd")]([ExtResource("1_j7j0l")])
