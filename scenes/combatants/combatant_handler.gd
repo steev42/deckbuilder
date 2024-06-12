@@ -28,18 +28,21 @@ func reset_side() -> void:
 
 
 func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> void:
-	# TODO Initialize all children, set their stats
+	# TODO Properly place enemies within the scene
+	print ("%s creatures found on side %s" % [len(side_stats),target_type])
 	# ^^ That's going to be the hard part here, I think.
 	for creature in side_stats:
 		if target_type == Combatant.TargetType.PLAYER:
 			var creature_scene := COMBATANT.instantiate()
 			#creature_scene.position
 			creature_scene.set_stats(creature)
+			creature_scene.position = Vector2(120,240)
 			add_child(creature_scene)
 		else:
 			var creature_scene := COMBATANT_AI.instantiate()
 			if creature is EnemyStats:
 				creature_scene.set_stats(creature)
+				creature_scene.position = Vector2(680,240)
 				# CHECK Only add if we have the right stats?
 				add_child(creature_scene)
 

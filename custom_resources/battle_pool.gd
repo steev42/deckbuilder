@@ -19,7 +19,9 @@ func get_random_creature_for_battle(level: int) -> BattleEntry:
 	var accumulated_weight := 0.0
 	for entry in _get_all_creatures_for_level(level):
 		accumulated_weight += entry.adjusted_weight
-		if accumulated_weight <= roll:
+		print ("Check roll of %s vs accumulated weight of %s" % [roll, accumulated_weight])
+		if roll <= accumulated_weight:
+			print ("Weight less than roll. Returning %s" % entry.id)
 			return entry
 	return null
 
@@ -27,6 +29,7 @@ func _get_total_weights_by_level(level: int) -> float:
 	var sum_weight := 0.0
 	for entry in _get_all_creatures_for_level(level):
 		sum_weight += entry.adjusted_weight
+	print ("Random roll, total weight: %s" % sum_weight)
 	return sum_weight
 
 func _get_all_creatures_for_level(level: int) -> Array[BattleEntry]:

@@ -61,17 +61,20 @@ script = ExtResource("5_65doh")
 
 [node name="EnemyHandler" parent="CombatManager" instance=ExtResource("6_qtuhh")]
 
-[node name="EnemyHandler" type="Node2D" parent="."]
+[node name="EnemyHandler1" type="Node2D" parent="."]
 process_mode = 4
+visible = false
 script = ExtResource("6_5xjsf")
 
-[node name="RatEnemy" parent="EnemyHandler" instance=ExtResource("6_7yt4h")]
+[node name="RatEnemy" parent="EnemyHandler1" instance=ExtResource("6_7yt4h")]
+visible = false
 position = Vector2(862, 297)
 ai = ExtResource("7_iekho")
 stats = ExtResource("8_mkd0g")
 
 [node name="CombatantPlayer" parent="." instance=ExtResource("8_2gelq")]
 process_mode = 4
+visible = false
 position = Vector2(137, 275)
 stats = ExtResource("2_wisx3")
 

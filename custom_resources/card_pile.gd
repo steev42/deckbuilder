@@ -5,6 +5,9 @@ signal card_pile_size_changed(cards_amount)
 
 @export var cards: Array[Card] = []
 
+func size() -> int:
+	return cards.size()
+
 func empty() -> bool:
 	return cards.is_empty()
 

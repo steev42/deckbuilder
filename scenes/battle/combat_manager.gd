@@ -72,10 +72,13 @@ func start_battle(players: Array[Stats], enemies: Array[Stats], allies: Array[St
 	
 	# These methods should place creatures on the board, setup any card piles,
 	# and TODO possibly arrange the UI to link to the player card piles.
+	print ("Setting up Player side")
 	player_handler.setup_side(players, Combatant.TargetType.PLAYER)
+	print ("Setting up Enemy side")
 	enemy_handler.setup_side(enemies, Combatant.TargetType.ENEMY)
+	print ("Setting up Ally side")
 	ally_handler.setup_side(allies, Combatant.TargetType.ALLY)
-	
+	print ("Side setup complete, starting first round of combat")
 	# Now that everyone is setup, we can start the fight.  Allies go first!
 	ally_handler.start_round()
 	

@@ -29,7 +29,8 @@ func _ready() -> void:
 func set_stats(value:Stats) -> void:
 	if not value:
 		return
-
+	if not is_node_ready:
+		await ready
 	# If AI, need to create new instance. If player, instance created in
 	# run script (eventually--currently battle).
 	if target_type == TargetType.PLAYER:
@@ -48,12 +49,14 @@ func set_stats(value:Stats) -> void:
 func setup_for_battle() -> void:
 	# TODO For Allies & Enemies, make sure starting deck is properly
 	# configured.
+	print ("Setting up for battle - %s" % stats.character_name)
+	print ("Taking a look at the deck; %s cards found." % stats.deck.size())
 	stats.draw_pile = stats.deck.duplicate()
-	
+	print ("Draw pile created; %s cards found." % stats.draw_pile.size())
 	# Let's make sure that there is now a draw pile before we do other things.
 	# Since when we first test this, we're still using action pickers for AI
 	# creatures instead of decks.
-	if len(stats.draw_pile.cards) > 0:
+	if stats.draw_pile.size() > 0:
 		stats.draw_pile.shuffle()
 		stats.discard = CardPile.new()
 		# TODO Hand initialization?

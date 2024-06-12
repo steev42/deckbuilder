@@ -40,8 +40,8 @@ func start_battle(stats: Stats_Player) -> void:
 	MusicPlayer.play(music, true)
 	#enemy_handler.reset_enemy_actions()
 	#player_handler.start_battle(stats)
-	var enemies := battle_stats.get_battle_enemies(battle_level, battle_pool)
-	
+	var enemies : Array[Stats] = battle_stats.get_battle_enemies(battle_level, battle_pool)
+	# TODO This is still sometimes returning 0 enemies...
 	combat_manager.start_battle([stats], enemies as Array[Stats], [])
 
 

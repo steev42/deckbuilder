@@ -37,10 +37,13 @@ func setup_ai() -> void:
 	if ai_action_picker:
 		ai_action_picker.queue_free()
 	
-	var new_action_picker: EnemyActionPicker = ai.instantiate()
-	add_child(new_action_picker)
-	ai_action_picker = new_action_picker
-	ai_action_picker.enemy = self
+	if ai:
+		var new_action_picker: EnemyActionPicker = ai.instantiate()
+		add_child(new_action_picker)
+		ai_action_picker = new_action_picker
+		ai_action_picker.enemy = self
+	else:
+		print ("No AI found; enemy won't do anything!")
 
 
 func update_action() -> void:

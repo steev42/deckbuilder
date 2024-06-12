@@ -1,14 +1,24 @@
 class_name BattleStats
 extends Resource
 
-var combatants : Array[EnemyStats] = []
+var combatants : Array[Stats] = []
 var gold := 0
 
 # Level and Pool should come from map node.
-func get_battle_enemies(level: int, pool: BattlePool) -> Array[EnemyStats]:
+func get_battle_enemies(level: int, pool: BattlePool) -> Array[Stats]:
+	print ("In BattleStats.get_battle.enemies; looking for a level %s fight in pool" % level)
 	if not pool:
+		print ("Pool not found")
 		return []
+	
 	var encounter_head = pool.get_random_creature_for_battle(level)
+	if not encounter_head:
+		# TODO Catch error somehow?
+		print ("No starting creature!")
+		return []
+	
+	print ("Starting creature: %s" % encounter_head.enemy_stats.character_name)
+	
 	gold += randi_range(encounter_head.min_gold, encounter_head.max_gold)
 	pool.adjust_weights(encounter_head, Tweakables.repetitive_creature_multiplier)
 	combatants.append(encounter_head.enemy_stats)
