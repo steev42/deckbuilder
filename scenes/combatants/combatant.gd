@@ -58,16 +58,21 @@ func setup_for_battle() -> void:
 	# creatures instead of decks.
 	if stats.draw_pile.size() > 0:
 		stats.draw_pile.shuffle()
-		stats.discard = CardPile.new()
-		stats.hand = CardPile.new()
-		# TODO Hand initialization? - Is this done?
-		# Right now, Hand is an HBoxContainer and each card is unique within it
-		# That doesn't really work for non-player actors.  So we will need some
-		# way to remember/determine which cards creatures are drawing that doesn't
-		# rely on the Hand UI scene.
+		
+		if stats.discard == null:
+			stats.discard = CardPile.new()
+		else:
+			stats.discard.clear()
+			
+		if stats.hand == null:
+			stats.hand = CardPile.new()
+		else:
+			stats.hand.clear()
+	if target_type == TargetType.PLAYER:
+		Events.player_battle_setup_complete.emit()
 
 func draw_cards(amount: int) -> void:
-	Tweakables.debug_print("Drawing %s cards" % amount, Tweakables.DEBUG_LEVELS.DEBUG)
+	Tweakables.debug_print("Drawing %s cards" % amount, Tweakables.DEBUG_LEVELS.INFO)
 	var tween := create_tween()
 	for i in range (amount):
 		tween.tween_callback(draw_card)
@@ -93,11 +98,8 @@ func start_round() -> void:
 	stats.regenerate_mana() # TODO probably in the stats, check for statuses
 							# that effect turn-based mana
 	stats.block = 0 # TODO check for statuses that affect block
-	Tweakables.debug_print("In combatant.start_round for %s" % stats.character_name, Tweakables.DEBUG_LEVELS.DEBUG)
-	Tweakables.debug_print("target type is %s" % TargetType.keys()[target_type], Tweakables.DEBUG_LEVELS.DEBUG)
 	#HACK Draw Cards
 	if target_type == TargetType.PLAYER:
-		Tweakables.debug_print("...for a player; %s cards expected to be drawn" % stats.cards_per_turn, Tweakables.DEBUG_LEVELS.DEBUG)		
 		draw_cards(stats.cards_per_turn)
 		
 	start_round_complete.emit()
@@ -161,7 +163,6 @@ func check_for_death() -> void:
 	pass
 
 func _on_statuses_applied(type: Status.Type) -> void:
-	Tweakables.debug_print("combatant._on_statuses_applied: %s.%s" % [stats.character_name, Status.Type.keys()[type]], Tweakables.DEBUG_LEVELS.DEBUG)
 	match type:
 		Status.Type.START_OF_ROUND:
 			start_round()

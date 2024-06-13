@@ -124,8 +124,4 @@ func create_instance() -> Resource:
 	instance.draw_pile = CardPile.new()
 	instance.discard = CardPile.new()
 	instance.hand = CardPile.new()
-	instance.hand.card_added.connect(_on_card_added_test)
 	return instance
-
-func _on_card_added_test(card: Card) -> void:
-	print ("Stats knows we added a card to the hand")

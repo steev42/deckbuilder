@@ -6,7 +6,6 @@ var gold := 0
 
 # Level and Pool should come from map node.
 func get_battle_enemies(level: int, pool: BattlePool) -> Array[Stats]:
-	Tweakables.debug_print ("In BattleStats.get_battle.enemies; looking for a level %s fight in pool" % level , Tweakables.DEBUG_LEVELS.INFO)
 	if not pool:
 		print ("Pool not found")
 		return []

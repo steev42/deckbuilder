@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dch1yqotj1ulp"]
+[gd_scene load_steps=3 format=3 uid="uid://dch1yqotj1ulp"]
 
 [ext_resource type="Script" path="res://scenes/ui/hand_ui.gd" id="1_riy6v"]
+[ext_resource type="PackedScene" uid="uid://pgoinwulke3l" path="res://scenes/cardui/card_ui.tscn" id="2_lkqpx"]
 
 [node name="HandUI" type="Control"]
 layout_mode = 3
@@ -24,4 +25,17 @@ offset_right = 432.0
 offset_bottom = -23.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/separation = -6
 alignment = 1
+
+[node name="CardUI" parent="Hand" instance=ExtResource("2_lkqpx")]
+layout_mode = 2
+
+[node name="CardUI2" parent="Hand" instance=ExtResource("2_lkqpx")]
+layout_mode = 2
+
+[node name="CardUI3" parent="Hand" instance=ExtResource("2_lkqpx")]
+layout_mode = 2
+
+[node name="CardUI4" parent="Hand" instance=ExtResource("2_lkqpx")]
+layout_mode = 2

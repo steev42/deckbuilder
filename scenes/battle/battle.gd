@@ -21,11 +21,8 @@ func _ready() -> void:
 	#normally, we would do this on a 'Run' level so we keep our health,
 	#gold and deck between battles
 	var new_stats: Stats = char_stats.create_instance()
-	Tweakables.debug_print("battle.ready(); about to set battle_ui's char_stats", Tweakables.DEBUG_LEVELS.DEBUG)
 	battle_ui.char_stats = new_stats
-	Tweakables.debug_print("battle.ready(); char_stats set", Tweakables.DEBUG_LEVELS.DEBUG)
 	#player.stats = new_stats  # THIS WILL BE REMOVED
-	
 	enemy_handler.child_order_changed.connect(_on_enemies_child_order_changed)
 	#Events.enemy_turn_ended.connect(_on_enemy_turn_ended)
 
@@ -41,10 +38,7 @@ func start_battle(stats: Stats) -> void:
 	MusicPlayer.play(music, true)
 	#enemy_handler.reset_enemy_actions()
 	#player_handler.start_battle(stats)
-	Tweakables.debug_print("Calling initialize_card_pile_ui()", Tweakables.DEBUG_LEVELS.DEBUG)
-	battle_ui.initialize_card_pile_ui()
-	Tweakables.debug_print("Returned from initialize_card_pile_ui()", Tweakables.DEBUG_LEVELS.DEBUG)
-	
+	#Now handled via signal : battle_ui.initialize_card_pile_ui()
 	var enemies : Array[Stats] = battle_stats.get_battle_enemies(battle_level, battle_pool)
 	combat_manager.start_battle([stats], enemies as Array[Stats], [])
 

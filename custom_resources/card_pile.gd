@@ -19,7 +19,6 @@ func draw_card() -> Card:
 
 func add_card(card: Card) -> void:
 	cards.append(card)
-	Tweakables.debug_print("sending card_added signal", Tweakables.DEBUG_LEVELS.DEBUG)
 	card_added.emit(card)
 	card_pile_size_changed.emit(cards.size())
 

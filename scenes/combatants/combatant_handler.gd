@@ -38,8 +38,11 @@ func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> 
 		if target_type == Combatant.TargetType.PLAYER:
 			var creature_scene := COMBATANT.instantiate()
 			#creature_scene.position
-			creature_scene.set_stats(creature)
+			# HACK Set target type BEFORE setting the stats
+			# otherwise, it will be treated as an enemy and create a new
+			# instance.
 			creature_scene.target_type = target_type
+			creature_scene.set_stats(creature)
 			# HACK Hard coded position
 			creature_scene.position = Vector2(120,240)
 			add_child(creature_scene)
@@ -75,7 +78,6 @@ func _set_actors_for_phase() -> void:
 
 func start_round() -> void:
 	# TODO This function can be made generic by passing in a callable!
-	Tweakables.debug_print("In combat_handler.start_round", Tweakables.DEBUG_LEVELS.DEBUG)
 	_set_actors_for_phase()
 	current_step = _start_next_combatant_round
 	current_step.call()
