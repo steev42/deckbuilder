@@ -35,7 +35,7 @@ var mana: int: set = set_mana
 var deck: CardPile
 var discard: CardPile
 var draw_pile: CardPile
-var hand: Hand
+var hand: CardPile
 
 #TODO Make block an effect?
 var character_effects = {}
@@ -123,4 +123,9 @@ func create_instance() -> Resource:
 		instance.deck = CardPile.new()
 	instance.draw_pile = CardPile.new()
 	instance.discard = CardPile.new()
+	instance.hand = CardPile.new()
+	instance.hand.card_added.connect(_on_card_added_test)
 	return instance
+
+func _on_card_added_test(card: Card) -> void:
+	print ("Stats knows we added a card to the hand")

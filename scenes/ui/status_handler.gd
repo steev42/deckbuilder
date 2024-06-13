@@ -69,7 +69,7 @@ func _get_status(id: String) -> Status:
 	
 
 func _get_all_statuses() -> Array[Status]:
-	var statuses = []
+	var statuses : Array[Status] = []
 	for status_ui: StatusUI in get_children():
 		statuses.append(status_ui.status)
 	return statuses

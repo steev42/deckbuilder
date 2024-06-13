@@ -43,7 +43,7 @@ func setup_ai() -> void:
 		ai_action_picker = new_action_picker
 		ai_action_picker.enemy = self
 	else:
-		print ("No AI found; enemy won't do anything!")
+		Tweakables.debug_print ("No AI found; enemy won't do anything!", Tweakables.DEBUG_LEVELS.WARN)
 
 
 func update_action() -> void:

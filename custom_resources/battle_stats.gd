@@ -6,7 +6,7 @@ var gold := 0
 
 # Level and Pool should come from map node.
 func get_battle_enemies(level: int, pool: BattlePool) -> Array[Stats]:
-	print ("In BattleStats.get_battle.enemies; looking for a level %s fight in pool" % level)
+	Tweakables.debug_print ("In BattleStats.get_battle.enemies; looking for a level %s fight in pool" % level , Tweakables.DEBUG_LEVELS.INFO)
 	if not pool:
 		print ("Pool not found")
 		return []
@@ -17,7 +17,7 @@ func get_battle_enemies(level: int, pool: BattlePool) -> Array[Stats]:
 		print ("No starting creature!")
 		return []
 	
-	print ("Starting creature: %s" % encounter_head.enemy_stats.character_name)
+	Tweakables.debug_print ("Starting creature: %s" % encounter_head.enemy_stats.character_name, Tweakables.DEBUG_LEVELS.INFO)
 	
 	gold += randi_range(encounter_head.min_gold, encounter_head.max_gold)
 	pool.adjust_weights(encounter_head, Tweakables.repetitive_creature_multiplier)

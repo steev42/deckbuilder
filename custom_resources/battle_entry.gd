@@ -21,7 +21,7 @@ var adjusted_weight = default_weight
 @export var additional_creature_pool : BattlePool
 
 func fill_combat_encounter(level: int) -> Array[BattleEntry]:
-	print ("Choosing extra creatures?")
+	Tweakables.debug_print ("Choosing extra creatures?", Tweakables.DEBUG_LEVELS.INFO)
 	var extra_creatures : Array[BattleEntry] = []
 	for i in _get_number_of_additional_creatures():
 		extra_creatures.append(additional_creature_pool.get_random_creature_for_battle(level))
@@ -39,6 +39,6 @@ func _get_number_of_additional_creatures() -> int:
 	for i in len(additional_creature_weights):
 		accumulated_weight += additional_creature_weights[i]
 		if  roll <= accumulated_weight:
-			print ("Getting %s extra creatures" % i)
+			Tweakables.debug_print ("Getting %s extra creatures" % i, Tweakables.DEBUG_LEVELS.INFO)
 			return i
 	return 0

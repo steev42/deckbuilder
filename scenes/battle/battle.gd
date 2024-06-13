@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var char_stats: Stats_Player
+@export var char_stats: Stats
 @export var music : AudioStream
 @export var battle_pool : BattlePool
 @export var battle_level := 0
@@ -20,8 +20,10 @@ var battle_stats : BattleStats
 func _ready() -> void:
 	#normally, we would do this on a 'Run' level so we keep our health,
 	#gold and deck between battles
-	var new_stats: Stats_Player = char_stats.create_instance()
+	var new_stats: Stats = char_stats.create_instance()
+	Tweakables.debug_print("battle.ready(); about to set battle_ui's char_stats", Tweakables.DEBUG_LEVELS.DEBUG)
 	battle_ui.char_stats = new_stats
+	Tweakables.debug_print("battle.ready(); char_stats set", Tweakables.DEBUG_LEVELS.DEBUG)
 	#player.stats = new_stats  # THIS WILL BE REMOVED
 	
 	enemy_handler.child_order_changed.connect(_on_enemies_child_order_changed)
@@ -32,16 +34,18 @@ func _ready() -> void:
 	Events.player_died.connect(_on_player_died)
 	battle_stats = BattleStats.new()
 	start_battle(new_stats)
-	battle_ui.initialize_card_pile_ui()
 
 
-func start_battle(stats: Stats_Player) -> void:
+func start_battle(stats: Stats) -> void:
 	get_tree().paused = false
 	MusicPlayer.play(music, true)
 	#enemy_handler.reset_enemy_actions()
 	#player_handler.start_battle(stats)
+	Tweakables.debug_print("Calling initialize_card_pile_ui()", Tweakables.DEBUG_LEVELS.DEBUG)
+	battle_ui.initialize_card_pile_ui()
+	Tweakables.debug_print("Returned from initialize_card_pile_ui()", Tweakables.DEBUG_LEVELS.DEBUG)
+	
 	var enemies : Array[Stats] = battle_stats.get_battle_enemies(battle_level, battle_pool)
-	# TODO This is still sometimes returning 0 enemies...
 	combat_manager.start_battle([stats], enemies as Array[Stats], [])
 
 

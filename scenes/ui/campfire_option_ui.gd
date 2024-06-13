@@ -9,7 +9,7 @@ signal campfire_event_completed
 
 
 @export var effect : CampfireEffect
-@export var character_stats : Stats_Player
+@export var character_stats : Stats
 
 func _ready() -> void:
 	label.text = effect.name

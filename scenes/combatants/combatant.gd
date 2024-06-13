@@ -49,37 +49,61 @@ func set_stats(value:Stats) -> void:
 func setup_for_battle() -> void:
 	# TODO For Allies & Enemies, make sure starting deck is properly
 	# configured.
-	print ("Setting up for battle - %s" % stats.character_name)
-	print ("Taking a look at the deck; %s cards found." % stats.deck.size())
+	Tweakables.debug_print ("Setting up for battle - %s" % stats.character_name, Tweakables.DEBUG_LEVELS.INFO)
+	Tweakables.debug_print ("Taking a look at the deck; %s cards found." % stats.deck.size(), Tweakables.DEBUG_LEVELS.INFO)
 	stats.draw_pile = stats.deck.duplicate()
-	print ("Draw pile created; %s cards found." % stats.draw_pile.size())
+	Tweakables.debug_print ("Draw pile created; %s cards found." % stats.draw_pile.size(), Tweakables.DEBUG_LEVELS.INFO)
 	# Let's make sure that there is now a draw pile before we do other things.
 	# Since when we first test this, we're still using action pickers for AI
 	# creatures instead of decks.
 	if stats.draw_pile.size() > 0:
 		stats.draw_pile.shuffle()
 		stats.discard = CardPile.new()
-		# TODO Hand initialization?
+		stats.hand = CardPile.new()
+		# TODO Hand initialization? - Is this done?
 		# Right now, Hand is an HBoxContainer and each card is unique within it
 		# That doesn't really work for non-player actors.  So we will need some
 		# way to remember/determine which cards creatures are drawing that doesn't
 		# rely on the Hand UI scene.
 
+func draw_cards(amount: int) -> void:
+	Tweakables.debug_print("Drawing %s cards" % amount, Tweakables.DEBUG_LEVELS.DEBUG)
+	var tween := create_tween()
+	for i in range (amount):
+		tween.tween_callback(draw_card)
+		tween.tween_interval(0.2) # TODO Make this a constant
+	tween.finished.connect(
+		func(): Events.player_hand_drawn.emit())
+
+func draw_card() -> void:
+	reshuffle_deck_from_discard()
+	stats.hand.add_card(stats.draw_pile.draw_card())
+
+func reshuffle_deck_from_discard() -> void:
+	if not stats.draw_pile.empty():
+		return
+	while not stats.discard.empty():
+		stats.draw_pile.add_card(stats.discard.draw_card())
+	stats.draw_pile.shuffle()
+
 func start_round() -> void:
 	# The following method is called by the handler to actually start the
 	# combatant's round.
-	#status_handler.apply_statuses_by_type(Status.Type.START_OF_ROUND)
-	
+	#status_handler.apply_statuses_by_type(Status.Type.START_OF_ROUND)	
 	stats.regenerate_mana() # TODO probably in the stats, check for statuses
 							# that effect turn-based mana
 	stats.block = 0 # TODO check for statuses that affect block
-	
-	#TODO  Draw cards!
-	
+	Tweakables.debug_print("In combatant.start_round for %s" % stats.character_name, Tweakables.DEBUG_LEVELS.DEBUG)
+	Tweakables.debug_print("target type is %s" % TargetType.keys()[target_type], Tweakables.DEBUG_LEVELS.DEBUG)
+	#HACK Draw Cards
+	if target_type == TargetType.PLAYER:
+		Tweakables.debug_print("...for a player; %s cards expected to be drawn" % stats.cards_per_turn, Tweakables.DEBUG_LEVELS.DEBUG)		
+		draw_cards(stats.cards_per_turn)
+		
 	start_round_complete.emit()
 
 func end_round() -> void:
-	# discard cards
+	# TODO discard cards
 	end_round_complete.emit()
 
 
@@ -102,9 +126,9 @@ func take_damage(amount:int) -> void:
 	# 	in the same function. Can we do something about that?
 	if stats.health <= 0:
 		return
-	print ("In take_damage function")
+	Tweakables.debug_print ("In take_damage function", Tweakables.DEBUG_LEVELS.INFO)
 	var modified_damage := modifier_handler.get_modified_value(amount, Modifier.ModifierType.DAMAGE_TAKEN)
-	print ("dealing damage: {amount} is modified into {modded}" % {"amount":amount, "modded" : modified_damage})
+	Tweakables.debug_print ("dealing damage: {amount} is modified into {modded}" % {"amount":amount, "modded" : modified_damage}, Tweakables.DEBUG_LEVELS.INFO)
 	# Turn white and shake the sprite a little, then reset.
 	image.material = WHITE_SPRITE_MATERIAL
 	var tween := create_tween()
@@ -137,6 +161,7 @@ func check_for_death() -> void:
 	pass
 
 func _on_statuses_applied(type: Status.Type) -> void:
+	Tweakables.debug_print("combatant._on_statuses_applied: %s.%s" % [stats.character_name, Status.Type.keys()[type]], Tweakables.DEBUG_LEVELS.DEBUG)
 	match type:
 		Status.Type.START_OF_ROUND:
 			start_round()

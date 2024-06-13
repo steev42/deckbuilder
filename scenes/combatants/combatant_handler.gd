@@ -28,24 +28,30 @@ func reset_side() -> void:
 
 
 func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> void:
-	# TODO Properly place enemies within the scene
-	print ("%s creatures found on side %s" % [len(side_stats),target_type])
-	# ^^ That's going to be the hard part here, I think.
+	# TODO Properly position enemies within the scene
+	Tweakables.debug_print ("%s creatures found on side %s" % [len(side_stats),target_type], Tweakables.DEBUG_LEVELS.INFO)
+	if len(side_stats) == 0:
+		Tweakables.debug_print("No creatures found in %s" % Combatant.TargetType.keys()[target_type], Tweakables.DEBUG_LEVELS.WARN)
+		return
+	
 	for creature in side_stats:
 		if target_type == Combatant.TargetType.PLAYER:
 			var creature_scene := COMBATANT.instantiate()
 			#creature_scene.position
 			creature_scene.set_stats(creature)
+			creature_scene.target_type = target_type
+			# HACK Hard coded position
 			creature_scene.position = Vector2(120,240)
 			add_child(creature_scene)
 		else:
 			var creature_scene := COMBATANT_AI.instantiate()
 			if creature is EnemyStats:
+				creature_scene.target_type = target_type
 				creature_scene.set_stats(creature)
+				# HACK Hard coded position
 				creature_scene.position = Vector2(680,240)
 				# CHECK Only add if we have the right stats?
 				add_child(creature_scene)
-
 	
 	# for each child, listen to their signals as needed
 	# initialize decks/discard/exhaust piles
@@ -68,11 +74,11 @@ func _set_actors_for_phase() -> void:
 	
 
 func start_round() -> void:
-	if get_child_count() != 0:
-		_set_actors_for_phase()
-		current_step = _start_next_combatant_round
-		current_step.call()
-		#_start_next_combatant_round()
+	# TODO This function can be made generic by passing in a callable!
+	Tweakables.debug_print("In combat_handler.start_round", Tweakables.DEBUG_LEVELS.DEBUG)
+	_set_actors_for_phase()
+	current_step = _start_next_combatant_round
+	current_step.call()
 
 
 func _start_next_combatant_round() -> void:
