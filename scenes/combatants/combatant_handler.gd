@@ -11,8 +11,9 @@ signal start_round_complete
 signal side_turn_complete
 signal end_round_complete
 
-var stats: Stats
+#var stats: Stats
 var current_step : Callable
+
 func _ready() -> void:
 	# Listen for actions completed
 	#combatant.battle_stage_ended.connect(_on_battle_stage_ended)

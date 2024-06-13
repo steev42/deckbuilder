@@ -1,7 +1,7 @@
 class_name BattleUI
 extends CanvasLayer
 
-@export var char_stats: Stats : set = _set_char_stats
+#@export var char_stats: Stats : set = _set_char_stats
 
 @onready var hand_ui: HandUI = $HandUI
 @onready var mana_ui: ManaUI = $ManaUI as ManaUI
@@ -25,17 +25,17 @@ func _on_player_battle_setup_complete() -> void:
 	
 
 func initialize_card_pile_ui() -> void:
-	Tweakables.debug_print ("Battle UI initializing card piles: size of draw pile: %s" % char_stats.draw_pile.cards.size(), Tweakables.DEBUG_LEVELS.INFO)
-	draw_pile_button.card_pile = char_stats.draw_pile
-	draw_pile_view.card_pile = char_stats.draw_pile
-	discard_pile_button.card_pile = char_stats.discard
-	discard_pile_view.card_pile = char_stats.discard
+	Tweakables.debug_print ("Battle UI initializing card piles: size of draw pile: %s" % RunData.player_character_stats.draw_pile.cards.size(), Tweakables.DEBUG_LEVELS.INFO)
+	draw_pile_button.card_pile = RunData.player_character_stats.draw_pile
+	draw_pile_view.card_pile = RunData.player_character_stats.draw_pile
+	discard_pile_button.card_pile = RunData.player_character_stats.discard
+	discard_pile_view.card_pile = RunData.player_character_stats.discard
 
 
-func _set_char_stats(value : Stats) -> void:
-	char_stats = value
-	mana_ui.char_stats = char_stats
-	hand_ui.char_stats = char_stats
+#func _set_char_stats(value : Stats) -> void:
+	#char_stats = value
+	#mana_ui.char_stats = char_stats
+	#hand_ui.char_stats = char_stats
 
 
 func _on_player_hand_drawn() -> void:

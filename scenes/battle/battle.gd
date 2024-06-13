@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var char_stats: Stats
+#@export var char_stats: Stats
 @export var music : AudioStream
 @export var battle_pool : BattlePool
 @export var battle_level := 0
@@ -20,8 +20,8 @@ var battle_stats : BattleStats
 func _ready() -> void:
 	#normally, we would do this on a 'Run' level so we keep our health,
 	#gold and deck between battles
-	var new_stats: Stats = char_stats.create_instance()
-	battle_ui.char_stats = new_stats
+	#var new_stats: Stats = char_stats.create_instance()
+	#battle_ui.char_stats = new_stats
 	#player.stats = new_stats  # THIS WILL BE REMOVED
 	enemy_handler.child_order_changed.connect(_on_enemies_child_order_changed)
 	#Events.enemy_turn_ended.connect(_on_enemy_turn_ended)
@@ -30,17 +30,17 @@ func _ready() -> void:
 	#Events.player_hand_discarded.connect(enemy_handler.start_turn)
 	Events.player_died.connect(_on_player_died)
 	battle_stats = BattleStats.new()
-	start_battle(new_stats)
+	start_battle()
 
 
-func start_battle(stats: Stats) -> void:
+func start_battle() -> void:
 	get_tree().paused = false
 	MusicPlayer.play(music, true)
 	#enemy_handler.reset_enemy_actions()
 	#player_handler.start_battle(stats)
 	#Now handled via signal : battle_ui.initialize_card_pile_ui()
 	var enemies : Array[Stats] = battle_stats.get_battle_enemies(battle_level, battle_pool)
-	combat_manager.start_battle([stats], enemies as Array[Stats], [])
+	combat_manager.start_battle([RunData.player_character_stats], enemies as Array[Stats], [])
 
 
 #func _on_enemy_turn_ended() -> void:

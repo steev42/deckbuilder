@@ -21,9 +21,10 @@ const MAP_SCENE = preload("res://scenes/map/map.tscn")
 @onready var deck_button: CardPileOpener = %DeckButton
 @onready var deck_view: CardPileView = %DeckView
 @onready var gold_ui: GoldUI = %GoldUI
+@onready var debug_buttons: VBoxContainer = $DebugButtons
 
-var character: Stats
-var stats : RunStats
+#var character: Stats
+#var stats : RunStats
 
 func _ready() -> void:
 	if not run_startup:
@@ -31,17 +32,22 @@ func _ready() -> void:
 	
 	match run_startup.type:
 		RunStartup.Type.NEW_RUN:
-			character = run_startup.picked_character.create_instance()
-			run_character.texture = character.portrait
+			RunData.player_character_stats = run_startup.picked_character.create_instance()
+			run_character.texture = RunData.player_character_stats.portrait
 			_start_run()
 		RunStartup.Type.CONTINUED_RUN:
 			print ("TODO: load previous run")
 
+func _input(event) -> void:
+	if event.is_action_pressed("Toggle Debug"):
+		print ("Toggling debug menu?")
+		debug_buttons.visible = not debug_buttons.visible
 
 func _start_run() -> void:
-	stats = RunStats.new()
+	RunData.run_stats = RunStats.new()
 	_setup_event_connections()
 	_setup_top_bar()
+	# TODO Make Map
 	print("TODO: procedurally generate map")
 
 
@@ -73,9 +79,9 @@ func _setup_event_connections() -> void:
 
 
 func _setup_top_bar() -> void:
-	gold_ui.run_stats = stats
-	deck_button.card_pile = character.deck
-	deck_view.card_pile = character.deck
+	#gold_ui.run_stats = stats
+	deck_button.card_pile = RunData.player_character_stats.deck
+	deck_view.card_pile = RunData.player_character_stats.deck
 	deck_button.pressed.connect(deck_view.show_current_view.bind("Deck"))
 
 
@@ -85,8 +91,8 @@ func _on_map_exited() -> void:
 
 func _on_battle_won() -> void:
 	var reward_scene := _change_view(BATTLE_REWARDS_SCENE) as BattleReward
-	reward_scene.reward_gui.run_stats = stats
-	reward_scene.reward_gui.character_stats = character
+	#reward_scene.reward_gui.run_stats = stats
+	#reward_scene.reward_gui.character_stats = character
 	
 	# TEMP TESTING CODE
 	reward_scene.reward_gui.add_gold_reward(77)
@@ -95,8 +101,8 @@ func _on_battle_won() -> void:
 
 func _on_treasure_room_entered() -> void:
 	var treasure_scene := _change_view(TREASURE_ROOM_SCENE) as TreasureUI
-	treasure_scene.reward_gui.run_stats = stats
-	treasure_scene.reward_gui.character_stats = character
+	#treasure_scene.reward_gui.run_stats = stats
+	#treasure_scene.reward_gui.character_stats = character
 	
 	#TEMP TESTING CODE
 	treasure_scene.reward_gui.add_gold_reward(28)
@@ -105,5 +111,5 @@ func _on_treasure_room_entered() -> void:
 
 func _on_campfire_room_entered() -> void:
 	var campfire_scene := _change_view(CAMPFIRE_SCENE) as CampfireUI
-	campfire_scene.run_stats = stats
-	campfire_scene.character_stats = character
+	#campfire_scene.run_stats = stats
+	#campfire_scene.character_stats = character

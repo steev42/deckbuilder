@@ -1,8 +1,7 @@
-[gd_scene load_steps=20 format=3 uid="uid://ec7254tpq71t"]
+[gd_scene load_steps=19 format=3 uid="uid://ec7254tpq71t"]
 
 [ext_resource type="Texture2D" uid="uid://du1484s086n1a" path="res://art/dungeon_background.jpg" id="1_6sbhe"]
 [ext_resource type="Script" path="res://scenes/battle/battle.gd" id="1_qwpwj"]
-[ext_resource type="Resource" uid="uid://f1keeqnp4xd3" path="res://combatants/characters/warrior/warrior.tres" id="2_wisx3"]
 [ext_resource type="PackedScene" uid="uid://n4qqgvyibnyi" path="res://scenes/card_target_selector/card_target_selector.tscn" id="3_6vo1o"]
 [ext_resource type="AudioStream" uid="uid://siutennhwd0u" path="res://sound/8_bit_iced_village_lofi.mp3" id="3_mgtie"]
 [ext_resource type="Resource" uid="uid://cygkvvslnbwl8" path="res://battle_data/battle_pools/default_battle_pool.tres" id="4_lpfsc"]
@@ -24,7 +23,6 @@ size = Vector2(1152, 410)
 
 [node name="Battle" type="Node2D"]
 script = ExtResource("1_qwpwj")
-char_stats = ExtResource("2_wisx3")
 music = ExtResource("3_mgtie")
 battle_pool = ExtResource("4_lpfsc")
 metadata/_edit_lock_ = true
@@ -73,7 +71,6 @@ grow_horizontal = 2
 grow_vertical = 0
 
 [node name="ManaUI" parent="BattleUI" instance=ExtResource("11_7s4lt")]
-char_stats = ExtResource("2_wisx3")
 
 [node name="Tooltip" parent="BattleUI" instance=ExtResource("12_m4oqx")]
 offset_left = -177.0

@@ -8,7 +8,7 @@ const DRAG_STYLEBOX := preload("res://scenes/cardui/card_dragging_stylebox.tres"
 const HOVER_STYLEBOX := preload("res://scenes/cardui/card_hover_stylebox.tres")
 
 @export var card:Card : set = _set_card
-@export var char_stats: Stats : set = _set_char_stats
+@export var card_owner: Stats : set = _set_owner
 
 @onready var card_visuals: CardVisuals = $CardVisuals
 
@@ -40,7 +40,7 @@ func animate_to_position(new_position: Vector2, duration: float) -> void:
 func play() -> void:
 	if not card:
 		return
-	card.play(targets, char_stats)
+	card.play(targets, card_owner)
 	queue_free()
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -67,9 +67,9 @@ func _set_playable(value: bool) -> void:
 		card_visuals.cost.remove_theme_color_override("font_color")
 		card_visuals.image.modulate = Color(1,1,1,1)
 
-func _set_char_stats(value: Stats) -> void:
-	char_stats = value
-	char_stats.stats_changed.connect(_on_char_stats_changed)
+func _set_owner(value: Stats) -> void:
+	card_owner = value
+	card_owner.stats_changed.connect(_on_char_stats_changed)
 
 func _on_drop_point_detector_area_entered(area):
 	
@@ -86,7 +86,7 @@ func _on_card_drag_or_aiming_started(used_card: CardUI) -> void:
 
 func _on_card_drag_or_aiming_ended(_card: CardUI) -> void:
 	disabled = false
-	self.playable = char_stats.can_play_card(card)
+	self.playable = card_owner.can_play_card(card)
 
 func _on_char_stats_changed() -> void:
-	self.playable = char_stats.can_play_card(card)
+	self.playable = card_owner.can_play_card(card)

@@ -1,7 +1,7 @@
 class_name Hand
 extends HBoxContainer
 
-@export var char_stats: Stats
+#@export var char_stats: Stats
 @onready var card_ui = preload("res://scenes/cardui/card_ui.tscn")
 
 func add_card(card: Card)->void:
@@ -10,7 +10,8 @@ func add_card(card: Card)->void:
 	new_card_ui.reparent_requested.connect(_on_card_ui_reparent_requested)
 	new_card_ui.card = card
 	new_card_ui.parent = self
-	new_card_ui.char_stats = char_stats
+	new_card_ui.card_owner = RunData.player_character_stats
+	# CHECK do we need a hand UI for anyone but the player?
 	
 func discard_card(card: CardUI) -> void:
 	card.queue_free()

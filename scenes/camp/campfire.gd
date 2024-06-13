@@ -1,8 +1,8 @@
 class_name CampfireUI
 extends Control
 
-@export var run_stats : RunStats
-@export var character_stats: Stats
+#@export var run_stats : RunStats
+#@export var character_stats: Stats
 
 @onready var campfire_options: GridContainer = %CampfireOptions
 
@@ -15,12 +15,12 @@ func _ready() -> void:
 	uses.clear()
 	for opt in campfire_options.get_children():
 		opt.queue_free()
-	for option in run_stats.campfire_options:
+	for option in RunData.run_stats.campfire_options:
 		if not option:
 			continue
 		var child = CAMPFIRE_OPTION_UI.instantiate()
 		child.effect = option
-		child.character_stats = character_stats
+		#child.character_stats = character_stats
 		child.campfire_event_completed.connect(_on_campfire_event_completed)
 		campfire_options.add_child(child)
 		
@@ -39,5 +39,6 @@ func _on_campfire_event_completed(option_button: CampfireOptionUI) -> void:
 		option_button.button.disabled = true
 		option_button.button_image.modulate = Color.GRAY
 	actions += 1
-	if actions >= run_stats.campfire_selections:
+	if actions >= RunData.run_stats.campfire_selections:
+		#TODO Need to leave campfire!
 		print ("Done with campfire, figure out how to exit here")

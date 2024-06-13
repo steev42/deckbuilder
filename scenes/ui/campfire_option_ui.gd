@@ -9,7 +9,7 @@ signal campfire_event_completed
 
 
 @export var effect : CampfireEffect
-@export var character_stats : Stats
+#@export var character_stats : Stats
 
 func _ready() -> void:
 	label.text = effect.name
@@ -17,5 +17,5 @@ func _ready() -> void:
 
 
 func _on_button_pressed() -> void:
-	effect.execute(character_stats)
+	effect.execute(RunData.player_character_stats)
 	campfire_event_completed.emit(self)
