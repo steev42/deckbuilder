@@ -16,6 +16,7 @@ signal tooltip_hide_requested
 signal player_battle_setup_complete
 signal player_hand_drawn
 signal player_hand_discarded
+signal player_turn_started
 signal player_turn_ended
 signal player_damage_taken
 signal player_died

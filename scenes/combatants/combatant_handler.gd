@@ -53,11 +53,12 @@ func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> 
 			if creature is EnemyStats:
 				creature_scene.target_type = target_type
 				creature_scene.set_stats(creature)
-				# HACK Hard coded position
-				creature_scene.position = Vector2(680,240)
 				# HACK This feels like a poor way to do this, but...
 				if target_type == Combatant.TargetType.ENEMY:
 					creature_scene.add_to_group("enemy")
+					# HACK Hard coded positions
+					creature_scene.position = Vector2(560 + (120 * len(get_tree().get_nodes_in_group("enemy"))),240)
+				
 				elif target_type == Combatant.TargetType.ALLY:
 					creature_scene.add_to_group("ally")
 				# CHECK Only add if we have the right stats?
@@ -106,11 +107,10 @@ func _on_combatant_start_round_complete(c: Combatant) -> void:
 
 
 func start_side_turn() -> void:
-	if get_child_count() != 0:
-		_set_actors_for_phase()
-		current_step = _start_next_combatant_turn
-		current_step.call()
-		#_start_next_combatant_turn()
+	_set_actors_for_phase()
+	current_step = _start_next_combatant_turn
+	current_step.call()
+	#_start_next_combatant_turn()
 
 
 func _start_next_combatant_turn():
@@ -128,11 +128,10 @@ func _on_combatant_turn_complete(c: Combatant) -> void:
 
 
 func end_round() -> void:
-	if get_child_count() != 0:
-		_set_actors_for_phase()
-		current_step = _end_next_combatant_round
-		current_step.call()
-		#_end_next_combatant_round()
+	_set_actors_for_phase()
+	current_step = _end_next_combatant_round
+	current_step.call()
+	#_end_next_combatant_round()
 
 
 func _end_next_combatant_round() -> void:

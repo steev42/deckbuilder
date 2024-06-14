@@ -83,6 +83,7 @@ func _get_targets(targets: Array[Node]) -> Array[Node]:
 		return []
 	var tree := targets[0].get_tree()
 	match target:
+		# TODO There's a better way of doing this, I'm sure.
 		Target.SELF:
 			return tree.get_nodes_in_group("player")
 		Target.ALL_ENEMIES:

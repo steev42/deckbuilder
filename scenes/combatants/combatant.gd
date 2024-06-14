@@ -24,6 +24,7 @@ signal combatant_died
 func _ready() -> void:
 	status_handler.status_owner = self
 	status_handler.statuses_applied.connect(_on_statuses_applied)
+	Events.player_turn_ended.connect(_on_player_turn_end)
 
 
 func set_stats(value:Stats) -> void:
@@ -32,7 +33,7 @@ func set_stats(value:Stats) -> void:
 	if not is_node_ready:
 		await ready
 	# If AI, need to create new instance. If player, instance created in
-	# run script (eventually--currently battle).
+	# run script
 	if target_type == TargetType.PLAYER:
 		stats = value
 	else:
@@ -71,6 +72,7 @@ func setup_for_battle() -> void:
 	if target_type == TargetType.PLAYER:
 		Events.player_battle_setup_complete.emit()
 
+
 func draw_cards(amount: int) -> void:
 	Tweakables.debug_print("Drawing %s cards" % amount, Tweakables.DEBUG_LEVELS.INFO)
 	var tween := create_tween()
@@ -78,7 +80,8 @@ func draw_cards(amount: int) -> void:
 		tween.tween_callback(draw_card)
 		tween.tween_interval(0.2) # TODO Make this a constant
 	tween.finished.connect(
-		func(): Events.player_hand_drawn.emit())
+		func(): if target_type == TargetType.PLAYER: Events.player_hand_drawn.emit()) # TODO this signal sent for all combatants
+
 
 func draw_card() -> void:
 	reshuffle_deck_from_discard()
@@ -90,6 +93,7 @@ func reshuffle_deck_from_discard() -> void:
 	while not stats.discard.empty():
 		stats.draw_pile.add_card(stats.discard.draw_card())
 	stats.draw_pile.shuffle()
+
 
 func start_round() -> void:
 	# The following method is called by the handler to actually start the
@@ -103,6 +107,7 @@ func start_round() -> void:
 		draw_cards(stats.cards_per_turn)
 		
 	start_round_complete.emit()
+
 
 func end_round() -> void:
 	# TODO discard cards
@@ -153,14 +158,19 @@ func take_damage(amount:int) -> void:
 func heal(_amount:int) -> void:
 	pass
 
+
 func do_turn()-> void:
+	if target_type==TargetType.PLAYER:
+		Events.player_turn_started.emit()
 	# Do nothing here.  In the extending classes, this can be overwritten to
 	# actually do something.  But it's being called from the base class, so
 	# needs to have a placeholder function here.
 	pass
 
+
 func check_for_death() -> void:
 	pass
+
 
 func _on_statuses_applied(type: Status.Type) -> void:
 	match type:
@@ -175,6 +185,7 @@ func _on_statuses_applied(type: Status.Type) -> void:
 		Status.Type.END_OF_ROUND:
 			end_round()
 
+
 # TODO On the following two functions, they will *always* show the pointer. 
 # Should try to set something up that the pointer is only visible if the 
 # entered character is a valid target for the card. 
@@ -188,3 +199,7 @@ func _on_area_entered(_area: Area2D) -> void:
 
 func _on_area_exited(_area: Area2D) -> void:
 	pointer.hide()
+
+
+func _on_player_turn_end() -> void:
+	turn_complete.emit()
