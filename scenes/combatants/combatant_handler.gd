@@ -43,6 +43,7 @@ func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> 
 			# otherwise, it will be treated as an enemy and create a new
 			# instance.
 			creature_scene.target_type = target_type
+			creature_scene.add_to_group("player")
 			creature_scene.set_stats(creature)
 			# HACK Hard coded position
 			creature_scene.position = Vector2(120,240)
@@ -54,6 +55,11 @@ func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> 
 				creature_scene.set_stats(creature)
 				# HACK Hard coded position
 				creature_scene.position = Vector2(680,240)
+				# HACK This feels like a poor way to do this, but...
+				if target_type == Combatant.TargetType.ENEMY:
+					creature_scene.add_to_group("enemy")
+				elif target_type == Combatant.TargetType.ALLY:
+					creature_scene.add_to_group("ally")
 				# CHECK Only add if we have the right stats?
 				add_child(creature_scene)
 	

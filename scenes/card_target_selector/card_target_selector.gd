@@ -1,5 +1,6 @@
 extends Node2D
-
+# TODO This will probably need to be rewritten almost entirely once
+# we move to a tilemap for battle.
 const ARC_POINTS := 8
 
 @onready var area_2d: Area2D = $Area2D

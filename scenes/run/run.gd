@@ -40,7 +40,6 @@ func _ready() -> void:
 
 func _input(event) -> void:
 	if event.is_action_pressed("Toggle Debug"):
-		print ("Toggling debug menu?")
 		debug_buttons.visible = not debug_buttons.visible
 
 func _start_run() -> void:

@@ -77,6 +77,7 @@ func get_trait_array() -> Array[Trait]:
 		rv.append_array(other_traits)
 	return rv
 
+# TODO This whole file - change Array[Node] to Array[Area2D]? Array[Combatant]?
 func _get_targets(targets: Array[Node]) -> Array[Node]:
 	if not targets:
 		return []
