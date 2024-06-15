@@ -11,13 +11,10 @@ var active_handler = ally_handler
 
 func _get_next_handler() -> CombatantHandler:
 	if active_handler == ally_handler:
-		Tweakables.debug_print("PLAYER HANDLER ACTIVE", Tweakables.DEBUG_LEVELS.DEBUG)
 		return player_handler
 	if active_handler == player_handler:
-		Tweakables.debug_print("ENEMY HANDLER ACTIVE", Tweakables.DEBUG_LEVELS.DEBUG)
 		return enemy_handler
 	if active_handler == enemy_handler:
-		Tweakables.debug_print("ALLY HANDLER ACTIVE", Tweakables.DEBUG_LEVELS.DEBUG)
 		return ally_handler
 	return ally_handler
 
@@ -38,13 +35,10 @@ func _ready() -> void:
 
 func _on_start_round_complete(handler: CombatantHandler) -> void:
 	assert(active_handler==handler, "Ending start round of %s unexpectedly." % handler)
-	print ("start round complete")
 	active_handler = _get_next_handler()
 	if active_handler == ally_handler:
-		print ("calling ally_handler.start_side_turn")
 		ally_handler.start_side_turn()
 	else:
-		print ("calling active handler's start_round")
 		active_handler.start_round()
 
 

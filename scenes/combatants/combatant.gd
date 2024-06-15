@@ -111,7 +111,22 @@ func start_round() -> void:
 
 func end_round() -> void:
 	# TODO discard cards
+	await discard_hand()
+	Events.player_hand_discarded.emit()
 	end_round_complete.emit()
+
+
+func discard_hand() -> void:
+	#TODO Now it's drawing the next hand while still discarding this one. WHY?
+	if target_type == TargetType.PLAYER:
+		Events.player_discard_hand.emit()
+	while stats.hand.size() > 0:
+		stats.discard.add_card(stats.hand.draw_card())
+		await get_tree().create_timer(0.2).timeout
+		#tween.tween_callback(stats.discard.add_card.bind((stats.hand.draw_card())))
+		#tween.tween_callback(func() : print("Discard a card"))
+		#tween.tween_interval(2) # TODO get rid of magic number!
+		#stats.discard.add_card(stats.hand.draw_card())
 
 
 func update_stats() -> void:

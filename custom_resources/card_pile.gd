@@ -2,7 +2,8 @@ class_name CardPile
 extends Resource
 
 signal card_pile_size_changed(cards_amount)
-signal card_added(card)
+signal card_added(card: Card)
+signal card_removed(card: Card)
 
 @export var cards: Array[Card] = []
 
@@ -15,6 +16,7 @@ func empty() -> bool:
 func draw_card() -> Card:
 	var card = cards.pop_front()
 	card_pile_size_changed.emit(cards.size())
+	card_removed.emit(card)
 	return card
 
 func add_card(card: Card) -> void:

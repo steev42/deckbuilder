@@ -3,7 +3,7 @@ extends Combatant
 
 func _ready() -> void:
 	target_type = TargetType.PLAYER
-	Events.player_turn_ended.connect(_on_player_turn_end)
+	#Events.player_turn_ended.connect(_on_player_turn_end)
 
 
 func _on_player_turn_end() -> void:

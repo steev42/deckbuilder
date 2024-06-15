@@ -4,12 +4,16 @@ extends Control
 @onready var hand: HBoxContainer = %Hand
 @onready var card_ui = preload("res://scenes/cardui/card_ui.tscn")
 
+var visually_discarding = false
 #@export var char_stats: Stats : set = _set_char_stats
 
 func _ready() -> void:
 	for child in hand.get_children():
 		child.queue_free()
 	RunData.player_character_stats.hand.card_added.connect(add_card)
+	RunData.player_character_stats.hand.card_removed.connect(discard_card)
+	Events.player_discard_hand.connect(_on_player_discard_hand)
+	Events.player_hand_discarded.connect(_on_player_hand_discarded)
 	
 #func _set_char_stats(value: Stats) -> void:
 	#if not value:
@@ -30,8 +34,7 @@ func add_card(card: Card)->void:
 	if card == null:
 		Tweakables.debug_print("in hand_ui.add_card: null value", Tweakables.DEBUG_LEVELS.WARN)
 		return
-
-
+	
 	var new_card_ui := card_ui.instantiate()
 	hand.add_child(new_card_ui)
 	new_card_ui.reparent_requested.connect(_on_card_ui_reparent_requested)
@@ -40,8 +43,17 @@ func add_card(card: Card)->void:
 	new_card_ui.card_owner = RunData.player_character_stats
 
 
-func discard_card(card: CardUI) -> void:
-	card.queue_free()
+func discard_card(card: Card) -> void:
+	# NOTE: Godot compares by reference.  So the card reference ID
+	# should equal the card with the card UI.
+	for child : CardUI in hand.get_children():
+		if child.card == card:
+			child.queue_free()
+
+#func discard_card(card: CardUI) -> void:
+	#print ("in handUI.discard_card")
+	#print ("discard_card called; card = %s" % card.card_visuals.id)
+	#card.queue_free()
 
 
 func disable_hand() -> void:
@@ -57,3 +69,21 @@ func _on_card_ui_reparent_requested(child: CardUI) -> void:
 	var new_index := clampi (child.original_index, 0, get_child_count())
 	move_child.call_deferred(child, new_index)
 	child.set_deferred("disabled", false)
+
+
+func _on_player_discard_hand() -> void:
+	visually_discarding = true
+	print ("_on_player_discard_hand")
+	RunData.player_character_stats.hand.card_removed.disconnect(discard_card)
+	var tween = create_tween()
+	for card_ui: CardUI in hand.get_children():
+		print ("Should now be queueing a free...")
+		tween.tween_callback(card_ui.queue_free)
+		tween.tween_interval(0.2) # TODO Magic Number
+	visually_discarding = false
+
+
+func _on_player_hand_discarded() -> void:
+	while visually_discarding:
+		pass
+	RunData.player_character_stats.hand.card_removed.connect(discard_card)

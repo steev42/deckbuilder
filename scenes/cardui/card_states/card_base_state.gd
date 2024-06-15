@@ -23,7 +23,7 @@ func on_gui_input(event: InputEvent) -> void:
 		transition_requested.emit(self, CardState.State.CLICKED)
 
 func on_mouse_entered() -> void:
-	if not card_ui.playable or card_ui.disabled:
+	if not card_ui.playable or card_ui.disabled or card_ui.card == null:
 		return
 	#card_ui.card_visuals.panel.set(THEME_STRING, card_ui.HOVER_STYLEBOX)
 	card_ui.card_visuals.hover_glow.show()
