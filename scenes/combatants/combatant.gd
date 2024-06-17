@@ -20,13 +20,14 @@ signal combatant_died
 
 @export var stats: Stats : set = set_stats
 
+@export var groups : Array[StringName]
 
 func _ready() -> void:
 	status_handler.status_owner = self
 	status_handler.statuses_applied.connect(_on_statuses_applied)
 	Events.player_turn_ended.connect(_on_player_turn_end)
 	Events.card_played.connect(_on_card_played)
-
+	groups = get_groups()
 
 func set_stats(value:Stats) -> void:
 	if not value:
