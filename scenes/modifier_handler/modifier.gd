@@ -54,7 +54,7 @@ func get_modified_value(base: int) -> int:
 	var has_cond_override = false
 	var cond_override = 0
 	
-	print (get_children())
+	#print (get_children())
 	
 	for value: ModifierValue in get_children():
 		print (value)

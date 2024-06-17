@@ -73,11 +73,9 @@ func _on_card_ui_reparent_requested(child: CardUI) -> void:
 
 func _on_player_discard_hand() -> void:
 	visually_discarding = true
-	print ("_on_player_discard_hand")
 	RunData.player_character_stats.hand.card_removed.disconnect(discard_card)
 	var tween = create_tween()
 	for card_ui: CardUI in hand.get_children():
-		print ("Should now be queueing a free...")
 		tween.tween_callback(card_ui.queue_free)
 		tween.tween_interval(0.2) # TODO Magic Number
 	visually_discarding = false

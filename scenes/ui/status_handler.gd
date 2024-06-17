@@ -42,6 +42,7 @@ func add_status(status: Status) -> void:
 		status_icon.status = status
 		status_icon.status.status_applied.connect(_on_status_applied)
 		status_icon.status.initialize_status(status_owner)
+		return
 	
 	# if it can't stack and we're trying to add, just return
 	# TODO Why are we checking can_expire here? Not stackable implies that it can't expire?
@@ -50,6 +51,9 @@ func add_status(status: Status) -> void:
 		
 	# if it stacks, add the new value
 	else:
+		print("Adding the current value")
+		print ("_get_status value is %s" % _get_status(status.id).current_value)
+		print ("adding %s" % status.current_value)
 		_get_status(status.id).current_value += status.current_value
 		return
 
