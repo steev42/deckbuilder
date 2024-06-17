@@ -94,7 +94,7 @@ func _get_targets(targets: Array[Node]) -> Array[Node]:
 			return []
 
 func play(targets: Array[Node], card_owner: Stats) -> void:
-	Events.card_played.emit(self)
+	Events.card_played.emit(self, card_owner)
 	card_owner.mana -= cost
 	
 	if is_single_targeted():

@@ -25,6 +25,7 @@ func _ready() -> void:
 	status_handler.status_owner = self
 	status_handler.statuses_applied.connect(_on_statuses_applied)
 	Events.player_turn_ended.connect(_on_player_turn_end)
+	Events.card_played.connect(_on_card_played)
 
 
 func set_stats(value:Stats) -> void:
@@ -200,6 +201,9 @@ func _on_statuses_applied(type: Status.Type) -> void:
 		Status.Type.END_OF_ROUND:
 			end_round()
 
+func _on_card_played(card: Card, owner: Stats) -> void:
+	if owner == stats:
+		stats.discard.add_card(card)
 
 # TODO On the following two functions, they will *always* show the pointer. 
 # Should try to set something up that the pointer is only visible if the 
