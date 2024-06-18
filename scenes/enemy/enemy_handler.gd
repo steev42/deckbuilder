@@ -1,3 +1,4 @@
+# TODO Remove this class; it has been  taken over.
 class_name EnemyHandler
 extends Node2D
 

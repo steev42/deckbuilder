@@ -52,7 +52,9 @@ func setup_side(side_stats: Array[Stats], target_type: Combatant.TargetType) -> 
 			var creature_scene := COMBATANT_AI.instantiate()
 			if creature is EnemyStats:
 				creature_scene.target_type = target_type
+				creature_scene.ai = creature.ai
 				creature_scene.set_stats(creature)
+				creature_scene.update_character()
 				# HACK This feels like a poor way to do this, but...
 				if target_type == Combatant.TargetType.ENEMY:
 					creature_scene.add_to_group("enemy")
@@ -93,14 +95,17 @@ func start_round() -> void:
 
 func _start_next_combatant_round() -> void:
 	if acting_combatants.is_empty():
+		print ("No more actors, start_round_complete")
 		start_round_complete.emit()
 		return
 	# Apply the start of round statuses.  This also will cause a signal when complete
 	# that the child will react to.
+	print ("Starting next combatant's start_round: %s" % acting_combatants[0].stats.character_name)
 	acting_combatants[0].status_handler.apply_statuses_by_type(Status.Type.START_OF_ROUND)
 
 
 func _on_combatant_start_round_complete(c: Combatant) -> void:
+	print ("Combatant's start_round is complete: %s" % c.stats.character_name)
 	acting_combatants.erase(c)
 	#_start_next_combatant_round()
 	current_step.call()
@@ -115,9 +120,10 @@ func start_side_turn() -> void:
 
 func _start_next_combatant_turn():
 	if acting_combatants.is_empty():
+		print ("All combatants on side have finished")
 		side_turn_complete.emit()
 		return
-	
+	print ("Starting next combatant; %s remaining" % (len(acting_combatants)-1) )
 	acting_combatants[0].status_handler.apply_statuses_by_type(Status.Type.START_OF_TURN)
 
 

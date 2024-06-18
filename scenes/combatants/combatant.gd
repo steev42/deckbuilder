@@ -80,9 +80,9 @@ func draw_cards(amount: int) -> void:
 	var tween := create_tween()
 	for i in range (amount):
 		tween.tween_callback(draw_card)
-		tween.tween_interval(0.2) # TODO Make this a constant
+		tween.tween_interval(0.2) # TODO Magic number
 	tween.finished.connect(
-		func(): if target_type == TargetType.PLAYER: Events.player_hand_drawn.emit()) # TODO this signal sent for all combatants
+		func(): if target_type == TargetType.PLAYER: Events.player_hand_drawn.emit())
 
 
 func draw_card() -> void:
@@ -107,28 +107,28 @@ func start_round() -> void:
 	#HACK Draw Cards
 	if target_type == TargetType.PLAYER:
 		draw_cards(stats.cards_per_turn)
-		
+	
+	print ("Emitting start_round_complete; target_type = %s" % TargetType.keys()[target_type])
 	start_round_complete.emit()
+
+func do_end_of_turn() -> void:
+	await discard_hand()
+	Events.player_hand_discarded.emit()
+	turn_complete.emit()
 
 
 func end_round() -> void:
-	# TODO discard cards
-	await discard_hand()
-	Events.player_hand_discarded.emit()
+	#await discard_hand()
+	#Events.player_hand_discarded.emit()
 	end_round_complete.emit()
 
 
 func discard_hand() -> void:
-	#TODO Now it's drawing the next hand while still discarding this one. WHY?
 	if target_type == TargetType.PLAYER:
 		Events.player_discard_hand.emit()
 	while stats.hand.size() > 0:
 		stats.discard.add_card(stats.hand.draw_card())
-		await get_tree().create_timer(0.2).timeout
-		#tween.tween_callback(stats.discard.add_card.bind((stats.hand.draw_card())))
-		#tween.tween_callback(func() : print("Discard a card"))
-		#tween.tween_interval(2) # TODO get rid of magic number!
-		#stats.discard.add_card(stats.hand.draw_card())
+		await get_tree().create_timer(0.2).timeout # TODO Magic Number
 
 
 func update_stats() -> void:
@@ -192,14 +192,19 @@ func check_for_death() -> void:
 func _on_statuses_applied(type: Status.Type) -> void:
 	match type:
 		Status.Type.START_OF_ROUND:
+			print ("Got START_OF_ROUND statuses_applied for %s" % stats.character_name)
 			start_round()
 		Status.Type.START_OF_TURN:
+			print ("Got START_OF_TURN statuses_applied for %s" % stats.character_name)
 			do_turn()
 		Status.Type.END_OF_TURN:
-			turn_complete.emit()
+			print ("Got END_OF_TURN statuses_applied for %s" % stats.character_name)
+			#turn_complete.emit()
+			do_end_of_turn()
 			# This allows the next actor to start moving, but it is done
 			# in the handler and/or the manager.
 		Status.Type.END_OF_ROUND:
+			print ("Got END_OF_ROUND statuses_applied for %s" % stats.character_name)
 			end_round()
 
 func _on_card_played(card: Card, owner: Stats) -> void:
@@ -222,4 +227,5 @@ func _on_area_exited(_area: Area2D) -> void:
 
 
 func _on_player_turn_end() -> void:
-	turn_complete.emit()
+	if target_type == TargetType.PLAYER:
+		status_handler.apply_statuses_by_type(Status.Type.END_OF_TURN)

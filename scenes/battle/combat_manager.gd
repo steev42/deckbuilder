@@ -37,8 +37,10 @@ func _on_start_round_complete(handler: CombatantHandler) -> void:
 	assert(active_handler==handler, "Ending start round of %s unexpectedly." % handler)
 	active_handler = _get_next_handler()
 	if active_handler == ally_handler:
+		print ("calling ally_handler.start_side_turn")
 		ally_handler.start_side_turn()
 	else:
+		print ("calling next handler start_side_round")
 		active_handler.start_round()
 
 

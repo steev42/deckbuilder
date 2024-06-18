@@ -1,3 +1,4 @@
+# TODO Can probably remove this entire class. I don't believe it is used anywhere.
 class_name Combatant_Player
 extends Combatant
 

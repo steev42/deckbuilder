@@ -8,10 +8,13 @@ var current_action: EnemyAction : set = set_current_action
 
 @export var ai: PackedScene
 
+func _ready() -> void:
+	Events.enemy_action_completed.connect(_on_action_completed)
+	super._ready()
+
 func check_for_death() -> void:
 	if stats.health <= 0:
 		queue_free()
-
 
 func set_stats(value: Stats) -> void:
 	if not value:
@@ -65,9 +68,14 @@ func do_turn() -> void:
 func do_action() -> void:
 	if not current_action:
 		return
+	print ("%s doing action" % stats.character_name)
 	current_action.perform_action()
 
-func _on_action_completed() -> void:
+func _on_action_completed(enemy: Combatant) -> void:
+	# If this isn't ourself, we don't care!
+	if enemy != self:
+		return
+	
 	# If there is another action to do, do that (check mana, cards available, etc.)
 	
 	# Otherwise, do end of turn status effects

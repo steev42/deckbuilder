@@ -8,16 +8,19 @@ extends Panel
 
 @onready var mana_label: Label = $ManaLabel
 
-func _set_char_stats(value: Stats) -> void:
-	#char_stats = value
-	
+func _ready() -> void:
 	if not RunData.player_character_stats.stats_changed.is_connected(_on_stats_changed):
 		RunData.player_character_stats.stats_changed.connect(_on_stats_changed)
-	
-	if not is_node_ready():
-		await ready
-	
-	_on_stats_changed()
+
+# never called!
+#func _set_char_stats(value: Stats) -> void:
+	##char_stats = value
+	#
+	#if not is_node_ready():
+		#await ready
+	#
+	#_on_stats_changed()
 
 func _on_stats_changed() -> void:
+	print ("in manaUI._on_stats_changed()")
 	mana_label.text = "%s/%s" % [RunData.player_character_stats.mana, RunData.player_character_stats.max_mana]
