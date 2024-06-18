@@ -207,8 +207,8 @@ func _on_statuses_applied(type: Status.Type) -> void:
 			print ("Got END_OF_ROUND statuses_applied for %s" % stats.character_name)
 			end_round()
 
-func _on_card_played(card: Card, owner: Stats) -> void:
-	if owner == stats:
+func _on_card_played(card: Card, card_owner: Stats) -> void:
+	if card_owner == stats:
 		stats.discard.add_card(card)
 
 # TODO On the following two functions, they will *always* show the pointer. 
