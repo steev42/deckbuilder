@@ -25,11 +25,10 @@ func apply_statuses_by_type(type: Status.Type) -> void:
 	
 	var tween := create_tween()
 	for status: Status in status_queue:
-		tween.tween_callback(status.apply_status.bind(status_owner))
+		tween.tween_callback(status.apply.bind(status_owner))
 		tween.tween_interval(STATUS_APPLY_INTERVAL)
 	
 	tween.finished.connect(func(): statuses_applied.emit(type))
-
 
 func add_status(status: Status) -> void:
 	# check stack type
@@ -42,6 +41,7 @@ func add_status(status: Status) -> void:
 		status_icon.status = status
 		status_icon.status.status_applied.connect(_on_status_applied)
 		status_icon.status.initialize_status(status_owner)
+		print ("status %s added" % status_icon.status.id)
 		return
 	
 	# if it can't stack and we're trying to add, just return
@@ -80,6 +80,7 @@ func _get_all_statuses() -> Array[Status]:
 
 
 func _on_status_applied(status: Status) -> void:
+	print ("in status_handler.on_status_applied")
 	if status.can_expire:
 		status.do_stack_reduction()
 

@@ -34,5 +34,10 @@ func initialize_status(target: Node) -> void:
 
 
 func _on_status_changed(dmg_taken_modifier: Modifier) -> void:
+	print ("In _on_status_changed for exposed")
 	if current_value <= 0 and dmg_taken_modifier:
 		dmg_taken_modifier.remove_value(MODIFIER_NAME)
+		
+func apply(_target: Combatant) -> void:
+	print ("In exposed.apply")
+	super(_target)
