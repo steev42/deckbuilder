@@ -67,7 +67,6 @@ func set_block (value : int) -> void:
 
 func set_mana (value: int) -> void:
 	mana = clampi(value, 0, max_mana) 
-	print ("Mana being adjusted to %s" % value)
 	# TODO: Allow going over maximum with effects that aren't turn-based auto-generation?
 	stats_changed.emit()
 

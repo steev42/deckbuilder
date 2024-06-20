@@ -43,7 +43,6 @@ func clear_values() -> void:
 
 
 func get_modified_value(base: int) -> int:
-	print ("In modifier.get_modified_value")
 	var flat_adjustment: int = base
 	var percent_adjustment: float = 1.0
 	var min_value: int = floori(-INF)
@@ -54,17 +53,13 @@ func get_modified_value(base: int) -> int:
 	var has_cond_override = false
 	var cond_override = 0
 	
-	#print (get_children())
 	
 	for value: ModifierValue in get_children():
-		print (value)
 		match value.type:
 			ModifierValue.ValueType.FLAT_ADJUSTMENT:
 				flat_adjustment += floori(value.value)
-				print ("New flat adjustment: %s " % flat_adjustment)
 			ModifierValue.ValueType.PERCENTAGE_ADJUSTMENT:
 				percent_adjustment += value.value # Multiply, not add?
-				print ("New percentage adjustment: %s" % percent_adjustment)
 			ModifierValue.ValueType.MINIMUM_VALUE:
 				min_value = floori(max(min_value, value.value))
 			ModifierValue.ValueType.MAXIMUM_VALUE:
@@ -76,7 +71,7 @@ func get_modified_value(base: int) -> int:
 				has_conditional = true
 			_:
 				continue
-	print ("Got through all modifier values...")
+	#TODO REMINDER: return before all modifiers checked
 	return floori(flat_adjustment * percent_adjustment)
 	
 	var adjusted_value =  floori(min(max((flat_adjustment * percent_adjustment), min_value), max_value))

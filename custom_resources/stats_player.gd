@@ -8,7 +8,6 @@ func take_damage(damage: int) -> void:
 		Events.player_damage_taken.emit()
 
 func create_instance() -> Resource:
-	Tweakables.debug_print("In Stats_Player.create_instance() for some reason", Tweakables.DEBUG_LEVELS.CRITICAL)
 	var instance: Stats_Player = self.duplicate() as Stats_Player
 	instance.health = max_health
 	instance.block = 0

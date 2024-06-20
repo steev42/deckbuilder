@@ -16,8 +16,6 @@ func get_battle_enemies(level: int, pool: BattlePool) -> Array[Stats]:
 		print ("No starting creature!")
 		return []
 	
-	Tweakables.debug_print ("Starting creature: %s" % encounter_head.enemy_stats.character_name, Tweakables.DEBUG_LEVELS.INFO)
-	
 	gold += randi_range(encounter_head.min_gold, encounter_head.max_gold)
 	pool.adjust_weights(encounter_head, Tweakables.repetitive_creature_multiplier)
 	combatants.append(encounter_head.enemy_stats)

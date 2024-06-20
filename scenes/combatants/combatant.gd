@@ -52,10 +52,7 @@ func set_stats(value:Stats) -> void:
 func setup_for_battle() -> void:
 	# TODO For Allies & Enemies, make sure starting deck is properly
 	# configured.
-	Tweakables.debug_print ("Setting up for battle - %s" % stats.character_name, Tweakables.DEBUG_LEVELS.INFO)
-	Tweakables.debug_print ("Taking a look at the deck; %s cards found." % stats.deck.size(), Tweakables.DEBUG_LEVELS.INFO)
 	stats.draw_pile = stats.deck.duplicate()
-	Tweakables.debug_print ("Draw pile created; %s cards found." % stats.draw_pile.size(), Tweakables.DEBUG_LEVELS.INFO)
 	# Let's make sure that there is now a draw pile before we do other things.
 	# Since when we first test this, we're still using action pickers for AI
 	# creatures instead of decks.
@@ -76,7 +73,6 @@ func setup_for_battle() -> void:
 
 
 func draw_cards(amount: int) -> void:
-	Tweakables.debug_print("Drawing %s cards" % amount, Tweakables.DEBUG_LEVELS.INFO)
 	var tween := create_tween()
 	for i in range (amount):
 		tween.tween_callback(draw_card)
@@ -101,14 +97,11 @@ func start_round() -> void:
 	# The following method is called by the handler to actually start the
 	# combatant's round.
 	#status_handler.apply_statuses_by_type(Status.Type.START_OF_ROUND)	
-	stats.regenerate_mana() # TODO probably in the stats, check for statuses
-							# that effect turn-based mana
-	stats.block = 0 # TODO check for statuses that affect block
+
 	#HACK Draw Cards
 	if target_type == TargetType.PLAYER:
 		draw_cards(stats.cards_per_turn)
 	
-	print ("Emitting start_round_complete; target_type = %s" % TargetType.keys()[target_type])
 	start_round_complete.emit()
 
 func do_end_of_turn() -> void:
@@ -150,9 +143,7 @@ func take_damage(amount:int) -> void:
 	# 	in the same function. Can we do something about that?
 	if stats.health <= 0:
 		return
-	Tweakables.debug_print ("In take_damage function", Tweakables.DEBUG_LEVELS.INFO)
 	var modified_damage := modifier_handler.get_modified_value(amount, Modifier.ModifierType.DAMAGE_TAKEN)
-	Tweakables.debug_print ("dealing damage: {amount} is modified into {modded}" % {"amount":amount, "modded" : modified_damage}, Tweakables.DEBUG_LEVELS.INFO)
 	# Turn white and shake the sprite a little, then reset.
 	image.material = WHITE_SPRITE_MATERIAL
 	var tween := create_tween()
@@ -175,7 +166,12 @@ func take_damage(amount:int) -> void:
 func heal(_amount:int) -> void:
 	pass
 
-
+func prepare_for_turn() -> void:
+	stats.regenerate_mana() # TODO probably in the stats, check for statuses
+							# that effect turn-based mana
+	stats.block = 0 # TODO check for statuses that affect block
+	do_turn()
+	
 func do_turn()-> void:
 	if target_type==TargetType.PLAYER:
 		Events.player_turn_started.emit()
@@ -192,23 +188,19 @@ func check_for_death() -> void:
 func _on_statuses_applied(type: Status.Type) -> void:
 	match type:
 		Status.Type.START_OF_ROUND:
-			print ("Got START_OF_ROUND statuses_applied for %s" % stats.character_name)
 			start_round()
 		Status.Type.START_OF_TURN:
-			print ("Got START_OF_TURN statuses_applied for %s" % stats.character_name)
-			do_turn()
+			prepare_for_turn()
 		Status.Type.END_OF_TURN:
-			print ("Got END_OF_TURN statuses_applied for %s" % stats.character_name)
-			#turn_complete.emit()
 			do_end_of_turn()
 			# This allows the next actor to start moving, but it is done
 			# in the handler and/or the manager.
 		Status.Type.END_OF_ROUND:
-			print ("Got END_OF_ROUND statuses_applied for %s" % stats.character_name)
 			end_round()
 
 func _on_card_played(card: Card, card_owner: Stats) -> void:
 	if card_owner == stats:
+		# TODO actually remove from hand, too?
 		stats.discard.add_card(card)
 
 # TODO On the following two functions, they will *always* show the pointer. 

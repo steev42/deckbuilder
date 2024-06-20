@@ -15,24 +15,8 @@ func _ready() -> void:
 	Events.player_discard_hand.connect(_on_player_discard_hand)
 	Events.player_hand_discarded.connect(_on_player_hand_discarded)
 	
-#func _set_char_stats(value: Stats) -> void:
-	#if not value:
-		#Tweakables.debug_print("No value found", Tweakables.DEBUG_LEVELS.CRITICAL)
-		#return
-	#if not value.hand:
-		#Tweakables.debug_print("No hand found", Tweakables.DEBUG_LEVELS.CRITICAL)
-		#return
-		
-	#char_stats = value
-	#char_stats.hand.card_pile_size_changed.connect(_on_hand_size_changed)
-	
-	
-#func _on_hand_size_changed() -> void:
-	#pass
-
 func add_card(card: Card)->void:
 	if card == null:
-		Tweakables.debug_print("in hand_ui.add_card: null value", Tweakables.DEBUG_LEVELS.WARN)
 		return
 	
 	var new_card_ui := card_ui.instantiate()
@@ -49,11 +33,6 @@ func discard_card(card: Card) -> void:
 	for child : CardUI in hand.get_children():
 		if child.card == card:
 			child.queue_free()
-
-#func discard_card(card: CardUI) -> void:
-	#print ("in handUI.discard_card")
-	#print ("discard_card called; card = %s" % card.card_visuals.id)
-	#card.queue_free()
 
 
 func disable_hand() -> void:

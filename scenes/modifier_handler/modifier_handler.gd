@@ -27,8 +27,6 @@ func get_modifier(type: Modifier.ModifierType) -> Modifier:
 
 func get_modified_value(base: int, type: Modifier.ModifierType) -> int:
 	var modifier := get_modifier(type)
-	print ("In get_modified_value")
 	if not modifier: # No such modifier found, no adjustment
 		return base
-	print ("Modifier found, getting value")
 	return modifier.get_modified_value(base)

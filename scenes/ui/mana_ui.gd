@@ -22,5 +22,4 @@ func _ready() -> void:
 	#_on_stats_changed()
 
 func _on_stats_changed() -> void:
-	print ("in manaUI._on_stats_changed()")
 	mana_label.text = "%s/%s" % [RunData.player_character_stats.mana, RunData.player_character_stats.max_mana]

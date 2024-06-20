@@ -26,7 +26,6 @@ func _on_player_battle_setup_complete() -> void:
 	
 
 func initialize_card_pile_ui() -> void:
-	Tweakables.debug_print ("Battle UI initializing card piles: size of draw pile: %s" % RunData.player_character_stats.draw_pile.cards.size(), Tweakables.DEBUG_LEVELS.INFO)
 	draw_pile_button.card_pile = RunData.player_character_stats.draw_pile
 	draw_pile_view.card_pile = RunData.player_character_stats.draw_pile
 	discard_pile_button.card_pile = RunData.player_character_stats.discard

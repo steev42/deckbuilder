@@ -41,7 +41,6 @@ func add_status(status: Status) -> void:
 		status_icon.status = status
 		status_icon.status.status_applied.connect(_on_status_applied)
 		status_icon.status.initialize_status(status_owner)
-		print ("status %s added" % status_icon.status.id)
 		return
 	
 	# if it can't stack and we're trying to add, just return
@@ -51,9 +50,6 @@ func add_status(status: Status) -> void:
 		
 	# if it stacks, add the new value
 	else:
-		print("Adding the current value")
-		print ("_get_status value is %s" % _get_status(status.id).current_value)
-		print ("adding %s" % status.current_value)
 		_get_status(status.id).current_value += status.current_value
 		return
 
@@ -80,7 +76,6 @@ func _get_all_statuses() -> Array[Status]:
 
 
 func _on_status_applied(status: Status) -> void:
-	print ("in status_handler.on_status_applied")
 	if status.can_expire:
 		status.do_stack_reduction()
 

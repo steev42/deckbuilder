@@ -19,9 +19,7 @@ func get_random_creature_for_battle(level: int) -> BattleEntry:
 	var accumulated_weight := 0.0
 	for entry in _get_all_creatures_for_level(level):
 		accumulated_weight += entry.adjusted_weight
-		Tweakables.debug_print ("Check roll of %s vs accumulated weight of %s" % [roll, accumulated_weight], Tweakables.DEBUG_LEVELS.INFO)
 		if roll <= accumulated_weight:
-			Tweakables.debug_print ("Weight less than roll. Returning %s" % entry.id, Tweakables.DEBUG_LEVELS.INFO)
 			return entry
 	return null
 
@@ -29,7 +27,6 @@ func _get_total_weights_by_level(level: int) -> float:
 	var sum_weight := 0.0
 	for entry in _get_all_creatures_for_level(level):
 		sum_weight += entry.adjusted_weight
-	Tweakables.debug_print ("Random roll, total weight: %s" % sum_weight, Tweakables.DEBUG_LEVELS.INFO)
 	return sum_weight
 
 func _get_all_creatures_for_level(level: int) -> Array[BattleEntry]:

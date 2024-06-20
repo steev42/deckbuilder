@@ -11,7 +11,6 @@ func get_tooltip() -> String:
 
 func initialize_status(target: Node) -> void:
 	if target == null:
-		print ("No target to add status to!")
 		return
 	# Make sure target has a modifier handler
 	assert(target.get("modifier_handler"), "No modifiers on %s" % target)
@@ -34,10 +33,9 @@ func initialize_status(target: Node) -> void:
 
 
 func _on_status_changed(dmg_taken_modifier: Modifier) -> void:
-	print ("In _on_status_changed for exposed")
 	if current_value <= 0 and dmg_taken_modifier:
 		dmg_taken_modifier.remove_value(MODIFIER_NAME)
-		
+
+
 func apply(_target: Combatant) -> void:
-	print ("In exposed.apply")
 	super(_target)

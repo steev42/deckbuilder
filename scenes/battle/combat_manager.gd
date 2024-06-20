@@ -37,10 +37,8 @@ func _on_start_round_complete(handler: CombatantHandler) -> void:
 	assert(active_handler==handler, "Ending start round of %s unexpectedly." % handler)
 	active_handler = _get_next_handler()
 	if active_handler == ally_handler:
-		print ("calling ally_handler.start_side_turn")
 		ally_handler.start_side_turn()
 	else:
-		print ("calling next handler start_side_round")
 		active_handler.start_round()
 
 
@@ -74,13 +72,9 @@ func start_battle(players: Array[Stats], enemies: Array[Stats], allies: Array[St
 	
 	# These methods should place creatures on the board, setup any card piles,
 	# and TODO possibly arrange the UI to link to the player card piles.
-	Tweakables.debug_print ("Setting up Player side", Tweakables.DEBUG_LEVELS.INFO)
 	player_handler.setup_side(players, Combatant.TargetType.PLAYER)
-	Tweakables.debug_print ("Setting up Enemy side", Tweakables.DEBUG_LEVELS.INFO)
 	enemy_handler.setup_side(enemies, Combatant.TargetType.ENEMY)
-	Tweakables.debug_print ("Setting up Ally side", Tweakables.DEBUG_LEVELS.INFO)
 	ally_handler.setup_side(allies, Combatant.TargetType.ALLY)
-	Tweakables.debug_print ("Side setup complete, starting first round of combat", Tweakables.DEBUG_LEVELS.INFO)
 	# Now that everyone is setup, we can start the fight.  Allies go first!
 	active_handler = ally_handler # Just in case?
 	ally_handler.start_round()
