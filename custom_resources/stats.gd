@@ -118,10 +118,17 @@ func create_instance() -> Resource:
 	instance.block = 0
 	instance.mana = 0
 	if instance.starting_deck:
-		instance.deck = instance.starting_deck.duplicate()
+		instance.deck = duplicate_deck(instance.starting_deck) #instance.starting_deck.duplicate()
 	else:
 		instance.deck = CardPile.new()
 	instance.draw_pile = CardPile.new()
 	instance.discard = CardPile.new()
 	instance.hand = CardPile.new()
 	return instance
+
+func duplicate_deck(original: CardPile) -> CardPile:
+	var new_deck = CardPile.new()
+	for card in original.cards:
+		var new_card = card.duplicate()
+		new_deck.add_card(new_card)
+	return new_deck

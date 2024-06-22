@@ -22,6 +22,7 @@ var tween: Tween
 var playable := true : set = _set_playable
 var disabled := false
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	card_state_machine.init(self)
@@ -29,34 +30,44 @@ func _ready():
 	Events.card_drag_started.connect(_on_card_drag_or_aiming_started)
 	Events.card_drag_ended.connect(_on_card_drag_or_aiming_ended)
 	Events.card_aim_ended.connect(_on_card_drag_or_aiming_ended)
-	
+
+
 func _input(event: InputEvent) -> void:
 	card_state_machine.on_input(event)
+
 
 func animate_to_position(new_position: Vector2, duration: float) -> void:
 	tween = create_tween().set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "global_position", new_position, duration)
 
+
 func play() -> void:
 	if not card:
 		return
 	card.play(targets, card_owner)
-	queue_free()
+	# This line removes the played card; this card is NOT in the hand, so would
+	# not get removed from there.
+	queue_free() 
+
 
 func _on_gui_input(event: InputEvent) -> void:
 	card_state_machine.on_gui_input(event)
 
+
 func _on_mouse_entered() -> void:
 	card_state_machine.on_mouse_entered()
 
+
 func _on_mouse_exited() -> void:
 	card_state_machine.on_mouse_exited()
+
 
 func _set_card(value: Card) -> void:
 	if not is_node_ready():
 		await ready
 	card = value
 	card_visuals.card = card
+
 
 func _set_playable(value: bool) -> void:
 	playable = value
@@ -67,26 +78,31 @@ func _set_playable(value: bool) -> void:
 		card_visuals.cost.remove_theme_color_override("font_color")
 		card_visuals.image.modulate = Color(1,1,1,1)
 
+
 func _set_owner(value: Stats) -> void:
 	card_owner = value
 	card_owner.stats_changed.connect(_on_char_stats_changed)
 
+
 func _on_drop_point_detector_area_entered(area):
-	
 	if not targets.has(area):
 		targets.append(area)
 
+
 func _on_drop_point_detector_area_exited(area):
 	targets.erase(area)
+
 
 func _on_card_drag_or_aiming_started(used_card: CardUI) -> void:
 	if used_card == self:
 		return
 	disabled = true
 
+
 func _on_card_drag_or_aiming_ended(_card: CardUI) -> void:
 	disabled = false
 	self.playable = card_owner.can_play_card(card)
+
 
 func _on_char_stats_changed() -> void:
 	self.playable = card_owner.can_play_card(card)

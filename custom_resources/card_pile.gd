@@ -10,8 +10,10 @@ signal card_removed(card: Card)
 func size() -> int:
 	return cards.size()
 
+
 func empty() -> bool:
 	return cards.is_empty()
+
 
 func draw_card() -> Card:
 	var card = cards.pop_front()
@@ -19,17 +21,38 @@ func draw_card() -> Card:
 	card_removed.emit(card)
 	return card
 
+
+func _on_card_played(card: Card, card_owner: Stats, deck_owner: Stats):
+	if not card:
+		return
+	if card_owner != deck_owner:
+		return
+	remove_card(card)
+
+
+func remove_card(card: Card) -> void:
+	print ("deck size before removal: %s" % cards.size())
+	print ("card %s: %s" %[card, card.id])
+	cards.erase(card)
+	print ("deck size after removal: %s" % cards.size())
+	card_pile_size_changed.emit(cards.size())
+	card_removed.emit(card)
+
+
 func add_card(card: Card) -> void:
 	cards.append(card)
 	card_added.emit(card)
 	card_pile_size_changed.emit(cards.size())
 
+
 func shuffle() -> void:
 	cards.shuffle()
+
 
 func clear() -> void:
 	cards.clear()
 	card_pile_size_changed.emit(cards.size())
+
 
 func _to_string() -> String:
 	var _card_strings: PackedStringArray = []

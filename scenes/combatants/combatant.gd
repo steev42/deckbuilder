@@ -22,6 +22,8 @@ signal combatant_died
 
 @export var groups : Array[StringName]
 
+var one_time_increase := false
+
 func _ready() -> void:
 	status_handler.status_owner = self
 	status_handler.statuses_applied.connect(_on_statuses_applied)
@@ -68,6 +70,10 @@ func setup_for_battle() -> void:
 			stats.hand = CardPile.new()
 		else:
 			stats.hand.clear()
+		
+		if not Events.card_played.is_connected(stats.hand._on_card_played):
+			Events.card_played.connect(stats.hand._on_card_played.bind(stats))
+		
 	if target_type == TargetType.PLAYER:
 		Events.player_battle_setup_complete.emit()
 
@@ -83,7 +89,9 @@ func draw_cards(amount: int) -> void:
 
 func draw_card() -> void:
 	reshuffle_deck_from_discard()
-	stats.hand.add_card(stats.draw_pile.draw_card())
+	var drawn_card = stats.draw_pile.draw_card()
+	print ("drawing %s (%s)" % [drawn_card, drawn_card.id])
+	stats.hand.add_card(drawn_card)
 
 func reshuffle_deck_from_discard() -> void:
 	if not stats.draw_pile.empty():
@@ -201,6 +209,7 @@ func _on_statuses_applied(type: Status.Type) -> void:
 func _on_card_played(card: Card, card_owner: Stats) -> void:
 	if card_owner == stats:
 		# TODO actually remove from hand, too?
+		#stats.hand.remove_card(card, false)
 		stats.discard.add_card(card)
 
 # TODO On the following two functions, they will *always* show the pointer. 

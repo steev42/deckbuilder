@@ -9,6 +9,7 @@ var visually_discarding = false
 
 func _ready() -> void:
 	for child in hand.get_children():
+		print ("calling queue_free to remove placeholders/old cards")
 		child.queue_free()
 	RunData.player_character_stats.hand.card_added.connect(add_card)
 	RunData.player_character_stats.hand.card_removed.connect(discard_card)
@@ -30,10 +31,16 @@ func add_card(card: Card)->void:
 func discard_card(card: Card) -> void:
 	# NOTE: Godot compares by reference.  So the card reference ID
 	# should equal the card with the card UI.
+	print ("getting rid of card visual: Card=%s (%s)" % [card, card.id])
+	print ("Before removal; showing %s cards" % hand.get_child_count())
 	for child : CardUI in hand.get_children():
 		if child.card == card:
+			print ("Calling queue_free to remove disarded card; id=%s" % child.card)
 			child.queue_free()
-
+		else:
+			print ("Look at %s (%s); not discarding." % [child.card, child.card.id])
+	print ("After removal; showing %s cards" % hand.get_child_count())
+	
 
 func disable_hand() -> void:
 	for card in get_children():
@@ -52,15 +59,21 @@ func _on_card_ui_reparent_requested(child: CardUI) -> void:
 
 func _on_player_discard_hand() -> void:
 	visually_discarding = true
+	print ("disconnecting card_removed")
 	RunData.player_character_stats.hand.card_removed.disconnect(discard_card)
 	var tween = create_tween()
-	for card_ui: CardUI in hand.get_children():
-		tween.tween_callback(card_ui.queue_free)
+	for discard_card_ui: CardUI in hand.get_children():
+		print ("Tween->calling queue_free because hand discarded")
+		tween.tween_callback(discard_card_ui.queue_free)
 		tween.tween_interval(0.2) # TODO Magic Number
-	visually_discarding = false
+	tween.finished.connect(func(): visually_discarding = false)
 
 
 func _on_player_hand_discarded() -> void:
 	while visually_discarding:
 		pass
-	RunData.player_character_stats.hand.card_removed.connect(discard_card)
+	if not RunData.player_character_stats.hand.card_removed.is_connected(discard_card):
+		print ("reconnected")
+		RunData.player_character_stats.hand.card_removed.connect(discard_card)
+	else:
+		print ("reconnection failed because already connected?")

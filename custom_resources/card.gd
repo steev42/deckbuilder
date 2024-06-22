@@ -47,6 +47,8 @@ func _set_type_trait(value: Trait) -> void:
 
 
 func _set_target_trait(value: Trait) -> void:
+	if not value:
+		return
 	if value.trait_type != Trait.TraitType.TARGETS:
 		return
 	target_trait = value
@@ -94,6 +96,7 @@ func _get_targets(targets: Array[Node]) -> Array[Node]:
 			return []
 
 func play(targets: Array[Node], card_owner: Stats) -> void:
+	print ("Emitting Events.card_played")
 	Events.card_played.emit(self, card_owner)
 	card_owner.mana -= cost
 	

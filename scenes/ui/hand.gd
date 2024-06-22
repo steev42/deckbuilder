@@ -1,6 +1,8 @@
 class_name Hand
 extends HBoxContainer
 
+# TODO Remove? - NO LONGER USED
+
 #@export var char_stats: Stats
 @onready var card_ui = preload("res://scenes/cardui/card_ui.tscn")
 

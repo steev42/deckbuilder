@@ -105,7 +105,7 @@ func _on_card_reward_taken(card: Card) -> void:
 	if not RunData.player_character_stats or not card:
 		return
 	
-	RunData.player_character_stats.deck.add_card(card)
+	RunData.player_character_stats.deck.add_card(card.duplicate())
 
 
 func _on_back_button_pressed() -> void:
